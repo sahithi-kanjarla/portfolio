@@ -1,52 +1,43 @@
-# Nidhi Prajapati
+# Sahithi Kanjarla
 
-> Nidhi Prajapati is a software engineer building AI agents, voice AI and privacy-first web3 tools, currently working on AI agent reliability at Emergent (YC24). She is based in Bengaluru, India, and is open to work, including freelance and remote roles.
+> Sahithi Kanjarla is a Hyderabad-based software engineer (B.Tech CSE, class of 2026) building AI and real-time apps: document AI, RAG over audio and video, computer vision and agentic AI. Open to full-time roles.
 
-Website: https://www.somehowliving.tech
-Email: nidhiyp05@gmail.com
-LinkedIn: https://www.linkedin.com/in/nidhi-prajapati-5b4483248/
-GitHub: https://github.com/SomehowLiving
-X: https://x.com/pnyk05
-Devfolio: https://devfolio.co/@nuna
+Email: sahithikanjarla4082@gmail.com
+LinkedIn: https://www.linkedin.com/in/sahithi-kanjarla-569025289/
+GitHub: https://github.com/sahithi-kanjarla
 
 ## About
 
-Nidhi Prajapati is a software engineer who builds AI agents and the infrastructure around them. She works as an AI Agent Reliability Engineer at Emergent (YC24), keeping autonomous coding agents and AI-generated applications reliable in production, and is part of the Nethermind Internship Program, exploring AI-supported blockchain systems: agentic systems, security, natural-language interfaces, protocol design and agentic payments.
+Sahithi Kanjarla is a software engineer focused on AI and full-stack development. She started computer science at ICFAI Tech in 2022, moved from IoT experiments into first real projects, and worked as a software development trainee at Codeplayers in 2024. She started the GDG on campus chapter and grew it to 100+ students, was runner-up at the AWS GenAI competition, and placed 3rd at the internal Smart India Hackathon.
 
-She started a company at 17, Alphonse Esports, during COVID, then studied computer science at SMVIT (Sir M. Visvesvaraya Institute of Technology), Bengaluru. She found web3 in 2023 and built across multiple chains: SDKs, protocols, zero-knowledge proofs and agentic payments. She became an Algorand Foundation Ambassador, a SheFi Scholar and a Dev3Pack Fellow, ran workshops, mentored developers, and was the founding blockchain engineer at PeerHire. Since 2026 her focus is AI: agents, reliability, and the line where AI meets real systems.
+In 2026 she worked as an AI intern at NU10 on OCR, and as an intern at Ordnance Factory Medak building dashboards. Currently she is building evidence-driven AI agents that verify their answers.
 
-She builds end to end, from product idea and design to production, and cares most about what something is for and how it feels to the person using it.
+Outside of code: dance, painting, writing, comics, badminton, teaching and volunteering.
 
 ## Selected projects
 
-- [Voxie](https://voxieai.vercel.app/): voice agents that speak your caller's language: listening, turn-taking, interruptions and the voice, in 17 languages. Open source: https://github.com/SomehowLiving/Voxie
-- [REX by Softknock](https://softknockai.vercel.app/): an autonomous revenue execution agent that follows up every failed payment by email, text and a friendly call, in the customer's own language.
-- [Inscribe](https://studio-bay-omega.vercel.app/): a browser extension and agent-native workshop built on WebMCP. It uses a website's own declared tools when it has them and infers capabilities when it doesn't, so an AI agent acts on meaning instead of pixels. https://github.com/SomehowLiving/Inscribe
-- [ScreenMesh](https://screenmesh.vercel.app/): move work between your devices without moving it through an app you don't trust. Local-first, end-to-end encrypted. https://github.com/SomehowLiving/screenmesh
-- [Onkey](https://www.npmjs.com/package/@onkey/sdk): self-hosted web3 authentication for everyone, with email login and smart contract wallets, published on npm as @onkey/sdk. https://github.com/SomehowLiving/onkey
-- [Point](https://github.com/nidhiprajapati-ops/point): a system-wide spatial AI context layer: press a shortcut, select anything visible on screen, give an instruction, and get an answer or trigger an action.
-- [Acre](https://acre-web-three.vercel.app/): zero-knowledge attestations that let gig workers prove their income without revealing their financial data.
-- [Consensa](https://consensa.vercel.app/): three independent AI signals commit blind, and two must agree on-chain before anything trades.
-- [Ward](https://ward-steel.vercel.app/): runs risky on-chain interactions inside disposable, loss-capped smart-wallet pockets.
-- [x402 builder kit](https://x402-kit-kappa.vercel.app): a starter kit for AI agents that pay for APIs with the x402 protocol on Algorand.
-- [ClinaraAI](https://clinaraai-eight.vercel.app): clinical decision support with explainable AI across six diseases.
-- [UsageLedger](https://usage-ledger.vercel.app) and [Billing Migration Studio](https://billing-migration-studio.vercel.app): usage-based billing and billing-data migration infrastructure for SaaS.
-
-All projects: https://www.somehowliving.tech/work
+- GreenSwap: an AI shopping research agent that searches the live web for greener alternatives to everyday products and links each recommendation to supporting evidence. Currently being built. Code: https://github.com/sahithi-kanjarla/GreenSwap
+- Doodle Dance: draw a stick figure and it dances with you. Pose tracking runs in the browser through a webcam. Live: https://doodledance.onrender.com Code: https://github.com/sahithi-kanjarla/DoodleDance
+- VideoMind: ask questions about a YouTube link, an mp4 or an mp3, in English or an Indian language, and get answers with timestamps (RAG). Code: https://github.com/sahithi-kanjarla/Video_mind
+- Together Flow: a productivity app built around shared accountability: weekly priorities, private challenges with friends and shared work sessions. Code: https://github.com/sahithi-kanjarla/together-flow
+- VisionVoice AI: an assistive vision system that describes surroundings aloud, using OpenCV, YOLOv8, BLIP and gTTS. Code: https://github.com/sahithi-kanjarla/vision-voice
+- NutriSense: an AI nutrition and digital pantry app using the Gemini API, React, PostgreSQL and Supabase. Code: https://github.com/sahithi-kanjarla/nutrisense
+- Smart Cane Stick: an Arduino and IoT cane for visually impaired users. Code: https://github.com/sahithi-kanjarla/Smart-Cane-Stick
+- Data analytics projects: Retail Sales Performance Dashboard and Employee Performance & Retention Analytics (Power BI), Fashion Store Sales Analysis (Excel), Chemical Equipment Parameter Visualization (Django, React).
 
 ## FAQ
 
-### Who is Nidhi Prajapati?
-A Bengaluru-based software engineer who builds AI agents, voice AI and privacy-first web3 tools. She works on AI agent reliability at Emergent (YC24).
+### Who is Sahithi Kanjarla?
+A Hyderabad-based software engineer (class of 2026) building AI and full-stack apps.
 
 ### What does she build?
-AI agents (Voxie, REX, Inscribe, Point), web3 and privacy tools (Acre, Consensa, Ward, Onkey, the x402 builder kit), and billing infrastructure (UsageLedger, Billing Migration Studio). She works end to end, from product idea and design to production.
+AI agents (GreenSwap), RAG over audio and video (VideoMind), real-time and computer vision apps (Doodle Dance, VisionVoice AI) and data dashboards.
 
 ### Is she open to work?
-Yes. She is open to full-time roles and freelance projects, in Bengaluru or remote.
+Yes, for full-time roles.
 
 ### How do I contact her?
-Email nidhiyp05@gmail.com, or reach out on LinkedIn: https://www.linkedin.com/in/nidhi-prajapati-5b4483248/
+Email sahithikanjarla4082@gmail.com, or LinkedIn: https://www.linkedin.com/in/sahithi-kanjarla-569025289/
 
-### Where can I see her work?
-https://www.somehowliving.tech/work and https://github.com/SomehowLiving
+### Where can I see the work?
+https://github.com/sahithi-kanjarla

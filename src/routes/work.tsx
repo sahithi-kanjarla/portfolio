@@ -2,53 +2,30 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import { ArrowRight, ArrowUpRight, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import books from "@/assets/obj3d-books.webp";
 import brain from "@/assets/obj3d-brain.webp";
-import cat from "@/assets/obj3d-cat.webp";
-import globe from "@/assets/obj3d-globe.webp";
-import keys from "@/assets/obj3d-keys.webp";
-import billingShot from "@/assets/project-billing.webp";
-import clinaraShot from "@/assets/project-clinara.webp";
-import wardShot from "@/assets/project-ward.webp";
-import acreShot from "@/assets/project-acre.webp";
-import consensaShot from "@/assets/project-consensa.webp";
-import giftagentShot from "@/assets/project-giftagent.webp";
-import rexShot from "@/assets/project-rex.webp";
-import screenmeshShot from "@/assets/project-screenmesh.webp";
-import usageledgerShot from "@/assets/project-usageledger.webp";
-import voxieShot from "@/assets/project-voxie.webp";
-import x402Shot from "@/assets/project-x402.webp";
-import onkeyShot from "@/assets/project-onkey.webp";
-import inscribeShot from "@/assets/project-inscribe.webp";
 import climber from "@/assets/obj3d-climber.webp";
 import earth from "@/assets/rabbit-hole/earth.webp";
 import astronautFalling from "@/assets/rabbit-hole/astronaut-falling.webp";
-import camera from "@/assets/rabbit-hole/camera.webp";
-import code from "@/assets/rabbit-hole/code.webp";
 import console_ from "@/assets/rabbit-hole/console.webp";
-import cursor from "@/assets/rabbit-hole/cursor.webp";
-import folder from "@/assets/rabbit-hole/folder.webp";
 import headphones from "@/assets/rabbit-hole/headphones.webp";
-import laptop from "@/assets/rabbit-hole/laptop.webp";
-import phone from "@/assets/rabbit-hole/phone.webp";
-import sparkles from "@/assets/rabbit-hole/sparkles.webp";
 import { ArrivalFade, ClimbBackButton } from "@/components/rabbit-hole";
 import { jsonLd, pageMeta, SITE_URL } from "@/lib/seo";
+import { projects, type Project } from "@/lib/work-projects";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/work")({
   head: () => ({
     ...pageMeta({
-      title: "Projects — Nidhi Prajapati",
+      title: "Projects — Sahithi Kanjarla",
       description:
-        "All of Nidhi Prajapati's projects: AI agents (Voxie, REX, Inscribe, Point), web3 and privacy (Acre, Consensa, Ward, Onkey, x402), and billing infrastructure.",
+        "All of Sahithi Kanjarla's projects: agentic AI (GreenSwap), real-time and full-stack apps (Doodle Dance, Together Flow), computer vision (VisionVoice AI) and data analytics dashboards.",
       path: "/work",
     }),
     scripts: [
       jsonLd({
         "@type": "CollectionPage",
         url: `${SITE_URL}/work`,
-        name: "Projects by Nidhi Prajapati",
+        name: "Projects by Sahithi Kanjarla",
         author: { "@id": `${SITE_URL}/#person` },
         mainEntity: {
           "@type": "ItemList",
@@ -62,7 +39,7 @@ export const Route = createFileRoute("/work")({
               applicationCategory: "DeveloperApplication",
               ...(p.live ? { url: p.live } : {}),
               ...(p.code ? { codeRepository: p.code } : {}),
-              author: { "@type": "Person", name: "Nidhi Prajapati", url: SITE_URL },
+              author: { "@type": "Person", name: "Sahithi Kanjarla", url: SITE_URL },
             },
           })),
         },
@@ -71,40 +48,6 @@ export const Route = createFileRoute("/work")({
   }),
   component: WorkPage,
 });
-
-type Project = {
-  title: string;
-  tags: string[];
-  blurb: string;
-  long: string;
-  object: string;
-  shot?: string;
-  live?: string;
-  code?: string;
-  npm?: string;
-};
-
-// Every project gets one of the 3D objects; the ones with a live site also
-// get its screenshot in the spotlight.
-const projects: Project[] = [
-  { title: "REX", tags: ["AI agents"], object: climber, shot: rexShot, blurb: "autonomous revenue execution agent.", long: "follows up every failed payment: an email, a text, then a friendly call in your customer's own language, within rules you set.", live: "https://softknockai.vercel.app/", code: "https://github.com/SomehowLiving/rex.ai" },
-  { title: "Voxie", tags: ["AI agents", "Open source"], object: phone, shot: voxieShot, blurb: "voice AI that runs the call.", long: "voice agents that speak your caller's language: listening, turn-taking, interruptions and the voice, in 17 languages.", live: "https://voxieai.vercel.app/", code: "https://github.com/SomehowLiving/Voxie" },
-  { title: "ScreenMesh", tags: ["Open source"], object: laptop, shot: screenmeshShot, blurb: "local-first device mesh.", long: "move work between your devices without moving it through an app you don't trust. local-first, end-to-end encrypted.", live: "https://screenmesh.vercel.app/", code: "https://github.com/SomehowLiving/screenmesh" },
-  { title: "Inscribe", tags: ["AI agents", "Open source"], object: code, shot: inscribeShot, blurb: "let agents operate any website.", long: "a browser extension and an agent-native workshop built on WebMCP: it uses a site's own declared tools when it has them, and infers capabilities when it doesn't, so an agent acts on meaning instead of pixels.", live: "https://studio-bay-omega.vercel.app/", code: "https://github.com/SomehowLiving/Inscribe" },
-  { title: "Point", tags: ["AI agents"], object: cursor, blurb: "point at anything on screen, ask AI.", long: "a system-wide spatial context layer: press a shortcut, select anything visible on your screen, give an instruction, and get an answer or trigger an action — no screenshot, crop, upload, explain.", code: "https://github.com/nidhiprajapati-ops/point" },
-  { title: "Consensa", tags: ["AI agents", "Web3"], object: headphones, shot: consensaShot, blurb: "three AIs, sealed and checked on-chain.", long: "one AI can lie. three independent signals commit blind, and two must agree on-chain before anything trades.", live: "https://consensa.vercel.app/", code: "https://github.com/SomehowLiving/consensa" },
-  { title: "Acre", tags: ["Web3"], object: folder, shot: acreShot, blurb: "prove your income, reveal nothing.", long: "zero-knowledge attestations of earning capacity for gig workers. no raw financial data exposed, ever.", live: "https://acre-web-three.vercel.app/", code: "https://github.com/SomehowLiving/acre" },
-  { title: "GiftAgent", tags: ["AI agents"], object: sparkles, shot: giftagentShot, blurb: "programmable care for family.", long: "AI-powered financial care agents that look after your family members, quietly and reliably.", live: "https://trygiftagent.vercel.app/", code: "https://github.com/SomehowLiving/gift-agent" },
-  { title: "x402 builder kit", tags: ["Web3", "Open source"], object: code, shot: x402Shot, blurb: "agents that pay for APIs.", long: "from 402 to settlement: a starter kit for AI agents that pay for APIs with x402 on Algorand. no mocked payments.", live: "https://x402-kit-kappa.vercel.app", code: "https://github.com/SomehowLiving/x402-builder-kit" },
-  { title: "Onkey", tags: ["Web3", "Open source"], object: cursor, shot: onkeyShot, blurb: "self-hosted web3 auth.", long: "self-hosted web3 authentication for everyone: email login with smart contract wallets, as an SDK.", live: "https://onkey-nextjs-demo.vercel.app", code: "https://github.com/SomehowLiving/onkey", npm: "https://www.npmjs.com/package/@onkey/sdk" },
-  { title: "UsageLedger", tags: ["Open source"], object: keys, shot: usageledgerShot, blurb: "usage-based billing, reconciled.", long: "ingests raw product-usage events, prevents duplicate billing, meters usage, calculates charges and reconciles every one.", live: "https://usage-ledger.vercel.app", code: "https://github.com/SomehowLiving/usageLedger" },
-  { title: "ClinaraAI", tags: ["AI agents"], object: brain, shot: clinaraShot, blurb: "clinical decision support, explained.", long: "screens for six diseases in one session, with explainable AI, imaging workflows and generated clinical summaries, so clinicians see the why, not just the score.", live: "https://clinaraai-eight.vercel.app", code: "https://github.com/SomehowLiving/clinara-ai" },
-  { title: "Kairos", tags: ["Web3"], object: globe, blurb: "timing intelligence for polymarket.", long: "tells you when to enter a prediction market, not just what to bet on: timing signals for Polymarket.", code: "https://github.com/SomehowLiving/kairos-frontend" },
-  { title: "Ward", tags: ["Web3"], object: cat, shot: wardShot, blurb: "make risky on-chain moves survivable.", long: "runs risky on-chain interactions inside disposable, loss-capped smart-wallet pockets, so even a malicious contract can only take what's in the pocket.", live: "https://ward-steel.vercel.app", code: "https://github.com/SomehowLiving/Ward" },
-  { title: "Billing Migration Studio", tags: ["Open source"], object: books, shot: billingShot, blurb: "billing migrations at enterprise speed.", long: "validate, map and migrate billing data across Stripe, Chargebee and CSV exports, so SaaS teams can onboard customers without breaking their invoices.", live: "https://billing-migration-studio.vercel.app", code: "https://github.com/SomehowLiving/Billing-Migration-Studio" },
-  { title: "SpyCart", tags: ["AI agents"], object: camera, blurb: "secret-shop your competitors.", long: "an AI agent that buys your competitor's product for you, walks their funnel, and tells you exactly how they sell.", code: "https://github.com/SomehowLiving/spycart" },
-  { title: "Chaos-Drop", tags: ["Experiments"], object: console_, blurb: "a small experiment in chaos.", long: "a small experiment in controlled chaos.", live: "https://replit.com/@harshprajapatiy/Chaos-Drop", code: "https://github.com/SomehowLiving/Chaos-Drop" },
-];
 
 const filters = ["All", "AI agents", "Web3", "Open source", "Experiments"];
 
@@ -159,12 +102,12 @@ function WorkPage() {
     <main className="dark-page relative min-h-screen select-none overflow-hidden bg-[#0b0b0d] text-white">
       <ArrivalFade />
       <header className="fixed inset-x-0 top-0 z-50 flex items-center justify-between px-5 py-5 sm:px-8 sm:py-7">
-        <Link to="/" className="font-serif text-3xl font-medium">Nidhi</Link>
+        <Link to="/" className="font-serif text-3xl font-medium">Sahithi</Link>
         <nav className="hidden items-center gap-7 text-sm font-medium text-white/70 md:flex">
-          <Link to="/" className="hover:text-white">brain</Link>
+          <Link to="/" className="hover:text-white">home</Link>
           <span className="text-white underline underline-offset-8">work</span>
-          <a href="https://www.linkedin.com/in/nidhi-prajapati-5b4483248/" target="_blank" rel="noreferrer" className="hover:text-white">linkedin</a>
-          <a href="mailto:nidhiyp05@gmail.com" className="hover:text-white">let's talk</a>
+          <a href="https://www.linkedin.com/in/sahithi-kanjarla-569025289/" target="_blank" rel="noreferrer" className="hover:text-white">linkedin</a>
+          <a href="mailto:sahithikanjarla4082@gmail.com" className="hover:text-white">let's talk</a>
         </nav>
         <ClimbBackButton className="text-sm font-medium text-white/80 hover:text-white md:hidden">climb out ↑</ClimbBackButton>
       </header>
@@ -243,13 +186,13 @@ function WorkPage() {
 
 // A project's picture: its site screenshot, or — if it has no page to show —
 // its name over a loose hand-drawn thread.
-function Thumb({ p, big = false }: { p: Project; big?: boolean }) {
+export function Thumb({ p, big = false, light = false }: { p: Project; big?: boolean; light?: boolean }) {
   if (p.shot) {
     return <img src={p.shot} alt={`${p.title} website`} draggable={false} className="aspect-[16/10] w-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]" />;
   }
   return (
-    <div className="relative grid aspect-[16/10] w-full place-items-center overflow-hidden bg-white/[0.03]">
-      <svg aria-hidden="true" viewBox="0 0 200 125" className="absolute inset-0 h-full w-full text-white/15 transition-colors duration-500 group-hover:text-white/30">
+    <div className={cn("relative grid aspect-[16/10] w-full place-items-center overflow-hidden", light ? "bg-black/[0.03]" : "bg-white/[0.03]")}>
+      <svg aria-hidden="true" viewBox="0 0 200 125" className={cn("absolute inset-0 h-full w-full transition-colors duration-500", light ? "text-black/20 group-hover:text-black/40" : "text-white/15 group-hover:text-white/30")}>
         <path d="M-10 95 C40 15 70 120 100 60 C120 20 160 35 130 78 C110 105 70 70 110 52 C150 35 170 105 215 50" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
       </svg>
       <span className={cn("relative font-serif", big ? "text-6xl" : "text-3xl")}>{p.title}</span>
@@ -258,8 +201,10 @@ function Thumb({ p, big = false }: { p: Project; big?: boolean }) {
 }
 
 // 11. a project, up close.
-function Spotlight({ index, onClose, onMove }: { index: number; onClose: () => void; onMove: (d: number) => void }) {
+export function Spotlight({ index, onClose, onMove, light = false }: { index: number; onClose: () => void; onMove: (d: number) => void; light?: boolean }) {
   const p = projects[index]!;
+  // light: the same page on white paper, for /more
+  const L = (dark: string, lite: string) => (light ? lite : dark);
   useEffect(() => {
     const key = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -275,49 +220,49 @@ function Spotlight({ index, onClose, onMove }: { index: number; onClose: () => v
   }, [onClose, onMove]);
 
   return (
-    <div className="fixed inset-0 z-[150] overflow-y-auto bg-[#0b0b0d]/95 backdrop-blur-sm" onClick={onClose}>
-      <Sky count={0} />
+    <div className={cn("fixed inset-0 z-[150] overflow-y-auto backdrop-blur-sm", L("bg-[#0b0b0d]/95 text-white", "bg-white/95 text-[#0b0b0d]"))} onClick={onClose}>
+      {!light && <Sky count={0} />}
       <div key={index} className="animate-reveal relative mx-auto grid min-h-full max-w-[1300px] items-center gap-10 px-5 py-24 sm:px-8 md:grid-cols-[1fr_1.1fr]" onClick={(e) => e.stopPropagation()}>
         <div>
-          <p className="text-xs tracking-wide text-white/50">{String(index + 1).padStart(2, "0")} / {p.tags.join(" · ")}</p>
+          <p className={cn("text-xs tracking-wide", L("text-white/50", "text-black/50"))}>{String(index + 1).padStart(2, "0")} / {p.tags.join(" · ")}</p>
           <h3 className="mt-2 font-serif text-[clamp(3rem,6vw,5.5rem)] leading-none">{p.title}</h3>
-          <p className="mt-5 max-w-md text-lg leading-relaxed text-white/75">{p.long}</p>
+          <p className={cn("mt-5 max-w-md text-lg leading-relaxed", L("text-white/75", "text-black/75"))}>{p.long}</p>
           <div className="mt-8 flex flex-wrap gap-3">
             {p.live && (
-              <a href={p.live} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-[#0b0b0d] transition-opacity hover:opacity-85">
+              <a href={p.live} target="_blank" rel="noreferrer" className={cn("inline-flex items-center gap-2 rounded-full px-5 py-2.5 transition-opacity hover:opacity-85", L("bg-white text-[#0b0b0d]", "bg-[#0b0b0d] text-white"))}>
                 view project <ArrowRight className="h-4 w-4" />
               </a>
             )}
             {p.code && (
-              <a href={p.code} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-white/40 px-5 py-2.5 transition-colors hover:bg-white/10">
+              <a href={p.code} target="_blank" rel="noreferrer" className={cn("inline-flex items-center gap-2 rounded-full border px-5 py-2.5 transition-colors", L("border-white/40 hover:bg-white/10", "border-black/40 hover:bg-black/5"))}>
                 code <ArrowUpRight className="h-4 w-4" />
               </a>
             )}
             {p.npm && (
-              <a href={p.npm} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-white/40 px-5 py-2.5 transition-colors hover:bg-white/10">
+              <a href={p.npm} target="_blank" rel="noreferrer" className={cn("inline-flex items-center gap-2 rounded-full border px-5 py-2.5 transition-colors", L("border-white/40 hover:bg-white/10", "border-black/40 hover:bg-black/5"))}>
                 npm <ArrowUpRight className="h-4 w-4" />
               </a>
             )}
           </div>
           <div className="mt-6 flex flex-wrap gap-2">
             {p.tags.map((t) => (
-              <span key={t} className="rounded-full border border-white/15 px-3 py-1 text-xs text-white/60">{t}</span>
+              <span key={t} className={cn("rounded-full border px-3 py-1 text-xs", L("border-white/15 text-white/60", "border-black/15 text-black/60"))}>{t}</span>
             ))}
           </div>
         </div>
         <div className="relative">
-          <div className="overflow-hidden rounded-xl border border-white/10 shadow-2xl">
-            <Thumb p={p} big />
+          <div className={cn("overflow-hidden rounded-xl border shadow-2xl", L("border-white/10", "border-black/10"))}>
+            <Thumb p={p} big light={light} />
           </div>
-          <Spark className="-right-2 -top-6" />
+          <Spark className={cn("-right-2 -top-6", light && "text-black/70")} />
         </div>
       </div>
-      <button onClick={onClose} aria-label="Close" className="fixed right-5 top-5 grid h-11 w-11 place-items-center rounded-full border border-white/20 text-white hover:bg-white/10 sm:right-8 sm:top-7">
+      <button onClick={onClose} aria-label="Close" className={cn("fixed right-5 top-5 grid h-11 w-11 place-items-center rounded-full border sm:right-8 sm:top-7", L("border-white/20 text-white hover:bg-white/10", "border-black/20 text-black hover:bg-black/5"))}>
         <X className="h-5 w-5" />
       </button>
       <div className="fixed inset-x-0 bottom-6 flex justify-center gap-3" onClick={(e) => e.stopPropagation()}>
-        <button onClick={() => onMove(-1)} className="rounded-full border border-white/20 px-4 py-2 text-sm text-white/80 hover:bg-white/10">← prev</button>
-        <button onClick={() => onMove(1)} className="rounded-full border border-white/20 px-4 py-2 text-sm text-white/80 hover:bg-white/10">next →</button>
+        <button onClick={() => onMove(-1)} className={cn("rounded-full border px-4 py-2 text-sm", L("border-white/20 text-white/80 hover:bg-white/10", "border-black/20 text-black/70 hover:bg-black/5"))}>← prev</button>
+        <button onClick={() => onMove(1)} className={cn("rounded-full border px-4 py-2 text-sm", L("border-white/20 text-white/80 hover:bg-white/10", "border-black/20 text-black/70 hover:bg-black/5"))}>next →</button>
       </div>
     </div>
   );
