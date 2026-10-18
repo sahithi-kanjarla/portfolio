@@ -1,22 +1,29 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
-import { useEffect, useRef, useState, type CSSProperties, type ReactNode, type RefObject } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode, type RefObject } from "react";
 
+// TODO: swap these images for your own. The file names can stay the same,
+// just replace the pictures inside src/assets.
 import badminton from "@/assets/obj3d-badminton.webp";
-import astronaut from "@/assets/obj3d-astronaut.webp";
 import brain from "@/assets/obj3d-brain.webp";
-import camera from "@/assets/obj3d-camera.webp";
-import cat from "@/assets/obj3d-cat.webp";
-import climber from "@/assets/obj3d-climber.webp";
-import globe from "@/assets/obj3d-globe.webp";
-import headphones from "@/assets/obj3d-headphones.webp";
-import keys from "@/assets/obj3d-keys.webp";
-import me from "@/assets/me.webp";
-import laptop from "@/assets/obj3d-laptop.webp";
-import rexImage from "@/assets/project-rex.webp";
-import screenmeshImage from "@/assets/project-screenmesh.webp";
-import voxieImage from "@/assets/project-voxie.webp";
-import { CLIMBED_OUT, RabbitHoleButton, takeFlag } from "@/components/rabbit-hole";
+import dance from "@/assets/dance.webp";
+import book from "@/assets/book.webp";
+// TODO: replace with a stick-figure doodle (your DoodleDance character) hanging by its hands.
+import iot from "@/assets/iot.webp";
+import mic from "@/assets/Mic.webp";
+import paint from "@/assets/paint.webp";
+import profile from "@/assets/profile.png";
+import comic from "@/assets/comic.webp";
+import portLaptop from "@/assets/port-laptop.png";
+// TODO: add screenshots of your projects with these names (1200×912 works best).
+import doodledanceImage from "@/assets/project-doodledance.webp";
+import greenswapImage from "@/assets/project-greenswap.webp";
+import videomindImage from "@/assets/project-videomind.webp";
+import { CLIMBED_OUT, takeFlag } from "@/components/rabbit-hole";
+import { ThreadPlaneButton } from "@/components/thread-plane";
+import { Joystick } from "@/components/joystick";
+import { FunMode } from "@/components/fun-mode/fun-mode";
+import { PLUG_CORD, SocketPlug } from "@/components/socket-plug";
 import { Button } from "@/components/ui/button";
 import { jsonLd, pageMeta, person, SITE_URL } from "@/lib/seo";
 import { cn } from "@/lib/utils";
@@ -24,17 +31,17 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/")({
   head: () => ({
     ...pageMeta({
-      title: "Nidhi Prajapati — software engineer building AI agents & web3",
+      title: "Sahithi Kanjarla — software engineer (new grad '26), AI & full-stack",
       description:
-        "Nidhi Prajapati is a Bengaluru-based software engineer building AI agents, voice AI and privacy-first web3 tools. AI agent reliability at Emergent (YC24). Voxie, REX, Inscribe, ScreenMesh, Onkey.",
+        "Sahithi Kanjarla is a Hyderabad-based software engineer (B.Tech CSE 2026) building AI and real-time apps: document AI, RAG over audio and video, and a multiplayer dance app that tracks your pose in the browser. DoodleDance, VideoMind, GreenSwap. Open to full-time roles.",
       path: "/",
     }),
     scripts: [
       jsonLd({
         "@graph": [
           person,
-          { "@type": "WebSite", "@id": `${SITE_URL}/#website`, url: SITE_URL, name: "Nidhi Prajapati", publisher: { "@id": `${SITE_URL}/#person` } },
-          { "@type": "ProfilePage", url: SITE_URL, name: "Nidhi Prajapati — the anatomy of a curious developer", mainEntity: { "@id": `${SITE_URL}/#person` } },
+          { "@type": "WebSite", "@id": `${SITE_URL}/#website`, url: SITE_URL, name: "Sahithi Kanjarla", publisher: { "@id": `${SITE_URL}/#person` } },
+          { "@type": "ProfilePage", url: SITE_URL, name: "Sahithi Kanjarla — professionally curious. personally chaotic.", mainEntity: { "@id": `${SITE_URL}/#person` } },
         ],
       }),
     ],
@@ -42,11 +49,15 @@ export const Route = createFileRoute("/")({
   component: Portfolio,
 });
 
-const EMAIL = "nidhiyp05@gmail.com";
+// TODO: your email.
+const EMAIL = "sahithikanjarla4082@gmail.com";
 const LINKS = {
-  linkedin: "https://www.linkedin.com/in/nidhi-prajapati-5b4483248/",
-  github: "https://github.com/SomehowLiving",
-  x: "https://x.com/pnyk05",
+  linkedin: "https://www.linkedin.com/in/sahithi-kanjarla-569025289/",
+  github: "https://github.com/sahithi-kanjarla",
+  // TODO: your X link, or leave it empty and the button disappears.
+  x: "",
+  // TODO: paste your resume link (e.g. Google Drive share link), the button is always shown; until you add it, it does nothing.
+  resume: "",
 };
 
 // The cursor's comment bubble stays quiet until something has a reason to
@@ -60,18 +71,23 @@ const say = (id: string, text: string, fade = true) => {
   window.dispatchEvent(new CustomEvent<CursorComment>("cursor-comment", { detail: { id, text, fade } }));
 };
 
-// The image opens the live site; the arrow opens the code.
+// The image opens the live site (or the code, if there's no live link yet);
+// the arrow opens the code.
+// TODO: fill in the live links and check the repo URLs.
 const projects = [
-  { number: "01", title: "Voxie", image: voxieImage, tags: ["AI", "Open source"], blurb: "voice agents that speak your caller's language: 17 languages, real barge-in, open source.", live: "https://voxieai.vercel.app/", code: "https://github.com/SomehowLiving/Voxie" },
-  { number: "02", title: "REX by Softknock", image: rexImage, tags: ["AI", "Product"], blurb: "follows up every failed payment, by email, text and a friendly call, in your customer's own language.", live: "https://softknockai.vercel.app/", code: "https://github.com/SomehowLiving/rex.ai" },
-  { number: "03", title: "ScreenMesh", image: screenmeshImage, tags: ["Privacy", "Open source"], blurb: "move work between your devices without moving it through an app you don't trust. local-first, end-to-end encrypted.", live: "https://screenmesh.vercel.app/", code: "https://github.com/SomehowLiving/screenmesh" },
+  { number: "01", title: "GreenSwap", image: greenswapImage, tags: ["Agentic AI", "Currently building"], blurb: "an agent that hunts for greener swaps of things you already buy, and shows its receipts. still building this one.", live: "", code: "https://github.com/sahithi-kanjarla" },
+  { number: "02", title: "VideoMind", image: videomindImage, tags: ["RAG"], blurb: "throw it a youtube link, an mp4 or an mp3, in english or an indian language, and ask it anything. answers come with timestamps.", live: "", code: "https://github.com/sahithi-kanjarla/Video_mind" },
+  { number: "03", title: "DoodleDance", image: doodledanceImage, tags: ["Fullstack", "Real-time", "Open source"], blurb: "draw a stick figure and it dances with you. up to 12 friends in one room, live. only 10 bone angles leave your laptop, never your video.", live: "", code: "https://github.com/sahithi-kanjarla/DoodleDance" },
 ];
 
 // The story canvas is CANVAS_VW wide and slides CANVAS_TRAVEL_VW across the
 // scroll. Everything on it is placed in vw/vh, and the SVG uses a viewBox of
 // (CANVAS_VW * 10) x 1000, so one vw is 10 units and one vh is 10 units.
-const CANVAS_VW = 570;
-const CANVAS_TRAVEL_VW = 470;
+// THREAD_SHIFT is the extra stretch of thread between the laptop and "a jack of
+// all trades": everything after the intro sits that many vw further right.
+const THREAD_SHIFT = 20;
+const CANVAS_VW = 570 + THREAD_SHIFT;
+const CANVAS_TRAVEL_VW = 470 + THREAD_SHIFT;
 
 // Place something on the canvas by its vw/vh coordinates.
 const at = (x: number, y: number) => ({ left: `${x}vw`, top: `${y}vh` });
@@ -164,26 +180,40 @@ function sampleSegments(segments: Segment[], perSegment = 48): ThreadSamples {
 // The thread leaves the tangle and loops wildly between the rabbit holes,
 // smooths out through the few things that have my heart, runs straight along
 // the timeline, and simply stops before the work.
+const THREAD_INTRO_WAYPOINTS: Waypoint[] = [[56.9, 19.9], [80, 58], [104, 52], [120, 55]];
 const THREAD_WAYPOINTS: Waypoint[] = [
-  [56.9, 19.9], [80, 58], [98, 50], [110, 44, 8], [120, 66], [132, 68], [142, 66, -6],
+  [110, 44, 8], [120, 66], [132, 68], [142, 66, -6],
   [151, 56], [156, 40], [164, 29], [171, 33], [174.5, 35.6], [181, 42], [186, 62], [198, 68],
   [205, 68], [216, 50], [229, 34], [233, 50], [250, 58], [262, 70], [272, 88], [292, 54],
   [304, 48], [322, 51], [340, 52], [358, 50], [376, 46], [394, 43], [410, 46],
   [422, 60], [440, 70], [458, 71], [LOOP_X, LOOP_Y, LOOP_R], [496, 76], [514, 78], [528, 70], [BUTTON_X, BUTTON_Y],
 ];
-const THREAD = threadPath(THREAD_WAYPOINTS);
+// The cable leaves the laptop's charging connector. These are the connector's
+// position inside the laptop picture (as a fraction of it) and its default
+// place on the canvas (vw/vh) until the real laptop has been measured.
+const LAPTOP_PORT = { x: 0.835, y: 0.607 };
+const DEFAULT_THREAD_START: [number, number] = [51, 44];
 
-// Sampled once, the first time anything needs points along the thread.
-let threadSamples: ThreadSamples | null = null;
-const getThreadSamples = () => (threadSamples ??= sampleSegments(threadSegments(THREAD_WAYPOINTS)));
+// Only the first waypoint moves with the laptop; the rest of the path, and
+// everything pinned to it, stays exactly where it was. A tiny lead-out keeps
+// the curve leaving the connector smoothly.
+const threadWaypoints = ([sx, sy]: [number, number]): Waypoint[] => [[sx, sy], [sx + 4, sy + 1.5], ...THREAD_INTRO_WAYPOINTS.slice(1), ...THREAD_WAYPOINTS.map(([x, y, loop]): Waypoint => (loop === undefined ? [x + THREAD_SHIFT, y] : [x + THREAD_SHIFT, y, loop]))];
 
-// A deliberately messy scribble ball — "an almost accurate map of everything on
-// my mind." It draws itself once on load before the rest of the page appears.
-const TANGLE = "M412 441 C515 397 634 254 612 324 C514 323 496 516 405 384 C462 554 503 411 563 536 C550 451 352 221 429 252 C463 251 542 590 592 462 C722 444 518 320 633 498 C733 324 559 351 502 325 C451 436 535 231 665 369 C653 189 542 154 453 252 C356 135 579 427 545 447 C580 505 551 553 468 379 C518 265 542 377 549 499 C417 489 679 300 622 421 C560 362 446 473 393 465 C424 562 372 482 401 372 C511 215 515 477 398 393 C299 375 474 580 439 424 C406 450 754 502 668 389 C754 375 628 135 588 240 C647 360 527 578 489 496 C412 647 637 651 506 469 C517 579 481 408 530 253 C626 196 462 257 574 279 C588 381 649 162 652 341 C736 176 676 270 595 393 C551 502 511 179 608 312 C612 397 708 447 616 375 C736 373 748 312 627 469 C552 479 478 362 535 275 C572 284 689 483 596 461 C546 415 740 502 646 350 C568 483 705 479 578 470 C598 357 572 439 563 438 C591 259 667 301 541 295 C514 408 442 336 425 339 C477 175 577 532 566 565 C690 668 539 510 601 520 C501 495 679 640 594 488 C588 419 456 553 539 509 C654 369 727 177 651 357 C569 254 524 516 473 584 C434 629 437 615 543 528 C442 532 526 141 593 255 C601 231 606 485 639 519 C647 390 459 557 538 507 C576 518 628 307 533 264 C629 164 569 587 504 469 C613 399 567 642 617 482 C541 668 630 423 525 561 C455 646 384 347 449 499 C539 470 700 212 622 354 C596 424 286 189 397 302 C446 458 674 337 547 482 C549 579 634 356 633 287 C549 135 414 322 520 498 C534 503 529 135 511 184 C425 135 660 668 568 590 C683 437 488 449 606 279 C596 379 420 421 467 434 C471 407 689 259 661 443 C716 574 443 556 529 573 C594 538 432 461 514 588 C517 405 556 436 450 322 C505 459 612 520 577 556 C604 558 721 555 590 440 C525 596 458 425 392 320 C477 284 564 456 457 313 C510 414 656 303 584 339 C645 177 559 393 602 405 C470 350 507 466 470 418 C398 587 607 453 562 514 C605 541 471 310 462 352 C597 406 484 646 429 547 C559 367 672 461 640 371 C574 334 357 135 479 238 C445 135 484 601 551 447 C565 450 754 442 661 416 C754 468 560 135 476 191 C502 289 516 578 638 416 C547 405 304 412 394 413 C423 246 578 558 458 588 C465 625 583 385 619 466 C661 489 450 271 508 189 C453 135 441 135 510 212 C417 308 529 344 558 194 C625 135 578 668 446 536 C331 668 614 267 632 276 C754 178 412 653 405 488 C465 476 724 388 594 268 C622 135 486 278 453 295 C373 135 426 166 418 308 C403 372 613 387 625 476 C647 446 734 396 660 384 C754 555 570 156 507 255 C403 404 586 275 509 227 C471 141 443 489 393 465 C418 515 700 369 632 486 C564 668 746 567 634 424 C510 258 381 378 443 406 C476 256 497 135 486 246 C374 313 426 307 413 257 C379 248 440 397 518 456 C584 584 366 418 481 562 C565 608 613 381 540 489 C520 398 704 245 621 295 C662 479 342 484 389 465 C455 624 444 499 463 549 C354 668 438 372 552 530 C569 524 619 135 569 199";
+// Built (and sampled) lazily, and again whenever the laptop's connector moves.
+let threadStart = DEFAULT_THREAD_START;
+let threadCache: { d: string; samples: ThreadSamples } | null = null;
+const getThread = () => (threadCache ??= { d: threadPath(threadWaypoints(threadStart)), samples: sampleSegments(threadSegments(threadWaypoints(threadStart))) });
+const getThreadSamples = () => getThread().samples;
+function setThreadStart(x: number, y: number) {
+  if (Math.abs(x - threadStart[0]) < 0.01 && Math.abs(y - threadStart[1]) < 0.01) return;
+  threadStart = [x, y];
+  threadCache = null;
+}
 
 function Portfolio() {
   const storyRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
+  const laptopRef = useRef<HTMLImageElement>(null);
   const listeners = useRef(new Set<(progress: number) => void>());
   const [noteRevealed, setNoteRevealed] = useState(false);
   const [scrollReady, setScrollReady] = useState(false);
@@ -224,7 +254,7 @@ function Portfolio() {
       setNoteRevealed(true);
       setScrollReady(true);
       window.clearTimeout(greet);
-      greet = window.setTimeout(() => say("intro", "hey there, nidhi here."), 1800);
+      greet = window.setTimeout(() => say("intro", "hey. sahithi here. mind the doodles."), 1800);
       window.clearTimeout(noteTimer);
       window.clearTimeout(unlockTimer);
       skipEvents.forEach((name) => window.removeEventListener(name, unlock));
@@ -267,7 +297,7 @@ function Portfolio() {
             canvas.querySelectorAll<HTMLElement>("[data-at]").forEach((el) => {
               // Most things reveal as they enter the screen; "thread" ones wait
               // for the thread itself (the loop's steps, the story comments).
-              const shown = (el.dataset["mode"] === "thread" ? tip : edge) >= Number(el.dataset["at"]);
+              const shown = (el.dataset["mode"] === "thread" ? tip : edge) >= Number(el.dataset["at"]) + THREAD_SHIFT;
               el.toggleAttribute("data-shown", shown);
               // Story comments are said once, the first time the thread arrives.
               const line = el.dataset["say"];
@@ -301,11 +331,18 @@ function Portfolio() {
   return (
     <main>
       <header className={cn("fixed inset-x-0 top-0 z-50 grid grid-cols-[minmax(0,1fr)_auto] items-center px-5 py-5 transition-opacity duration-700 sm:px-8 sm:py-7", solidHeader ? "bg-background" : "bg-transparent", scrollReady ? "opacity-100" : "pointer-events-none animate-reveal [animation-delay:2.6s]")}>
-        <button aria-label="Back to introduction" onClick={() => go("brain")} className="w-fit bg-transparent font-serif text-3xl font-medium">
-          Nidhi
-        </button>
+        <div className="flex items-center gap-3">
+          <button aria-label="Back to introduction" onClick={() => go("brain")} className="w-fit bg-transparent font-serif text-3xl font-medium">
+            Sahithi
+          </button>
+          {/* when you join a team, change this to "currently at ___" */}
+          <button onClick={() => go("hi")} className="inline-flex items-center gap-1.5 rounded-full border border-foreground/30 bg-transparent px-3 py-1 font-hand text-base leading-none tracking-wide" data-cursor="yes, really. say hi.">
+            <span aria-hidden="true" className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
+            open to work
+          </button>
+        </div>
         <nav className="hidden items-center gap-7 text-sm font-medium md:flex" aria-label="Main navigation">
-          <button onClick={() => go("brain")} className="story-link bg-transparent">brain</button>
+          <button onClick={() => go("brain")} className="story-link bg-transparent">home</button>
           <button onClick={() => go("work")} className="story-link bg-transparent">work</button>
           <a href={LINKS.linkedin} target="_blank" rel="noreferrer" className="story-link" data-cursor="the professional version.">linkedin</a>
           <button onClick={() => go("hi")} className="story-link bg-transparent" data-cursor="say hello?">let's talk</button>
@@ -316,7 +353,7 @@ function Portfolio() {
         </button>
         {menuOpen && (
           <nav className="absolute inset-x-4 top-16 grid gap-1 border border-border bg-background p-3 text-lg shadow-xl md:hidden">
-            <button onClick={() => go("brain")} className="p-3 text-left">brain</button>
+            <button onClick={() => go("brain")} className="p-3 text-left">home</button>
             <button onClick={() => go("work")} className="p-3 text-left">work</button>
             <a href={LINKS.linkedin} target="_blank" rel="noreferrer" className="p-3">linkedin</a>
             <button onClick={() => go("hi")} className="p-3 text-left">let's talk</button>
@@ -324,17 +361,20 @@ function Portfolio() {
         )}
       </header>
 
-      <section id="brain" ref={storyRef} className="relative md:h-[720vh]">
+      <section id="brain" ref={storyRef} className="relative md:h-[var(--story-h)]" style={{ "--story-h": `${(720 * CANVAS_TRAVEL_VW) / 470}vh` } as CSSProperties}>
         <div className="sticky top-0 hidden h-screen overflow-hidden md:block">
           <div ref={canvasRef} className="relative h-full will-change-transform max-md:hidden" style={{ width: `${CANVAS_VW}vw` }}>
-            <StringLine subscribe={subscribe} />
+            <StringLine subscribe={subscribe} laptopRef={laptopRef} />
+            <ThreadText subscribe={subscribe} />
             <div className="absolute inset-0 z-10">
-              <IntroScene contentRevealed={noteRevealed} noteRevealed={noteRevealed} />
-              <TinkerScene />
-              <HeartScene />
-              <TimelineScene />
-              <ApparentlyScene />
-              <EnoughScene onWork={() => go("work")} />
+              <IntroScene contentRevealed={noteRevealed} noteRevealed={noteRevealed} laptopRef={laptopRef} />
+              <div className="absolute top-0 h-full" style={{ left: `${THREAD_SHIFT}vw`, width: `${CANVAS_VW - THREAD_SHIFT}vw` }}>
+                <TinkerScene />
+                <HeartScene />
+                <TimelineScene />
+                <ApparentlyScene />
+                <EnoughScene onWork={() => go("work")} />
+              </div>
             </div>
           </div>
         </div>
@@ -360,9 +400,31 @@ const REVEAL_INSET = 4;
 
 type Subscribe = (listen: (progress: number) => void) => () => void;
 
-function StringLine({ subscribe }: { subscribe: Subscribe }) {
+function StringLine({ subscribe, laptopRef }: { subscribe: Subscribe; laptopRef: RefObject<HTMLImageElement | null> }) {
   const pathRef = useRef<SVGPathElement>(null);
   const tipRef = useRef<SVGCircleElement>(null);
+  const progressRef = useRef(0);
+  // The cable starts at the laptop's connector, wherever the laptop lands.
+  const [start, setStart] = useState(DEFAULT_THREAD_START);
+
+  useEffect(() => {
+    const measure = () => {
+      const img = laptopRef.current;
+      if (!img || img.offsetParent === null || window.innerWidth < 768) return;
+      const x = ((img.offsetLeft + img.offsetWidth * LAPTOP_PORT.x) / window.innerWidth) * 100;
+      const y = ((img.offsetTop + img.offsetHeight * LAPTOP_PORT.y) / window.innerHeight) * 100;
+      setThreadStart(x, y);
+      setStart((prev) => (Math.abs(prev[0] - x) < 0.01 && Math.abs(prev[1] - y) < 0.01 ? prev : [x, y]));
+    };
+    measure();
+    const img = laptopRef.current;
+    img?.addEventListener("load", measure);
+    window.addEventListener("resize", measure);
+    return () => {
+      img?.removeEventListener("load", measure);
+      window.removeEventListener("resize", measure);
+    };
+  }, [laptopRef]);
 
   useEffect(() => {
     const path = pathRef.current;
@@ -372,47 +434,125 @@ function StringLine({ subscribe }: { subscribe: Subscribe }) {
     const count = xs.length - 1;
 
     const draw = (progress: number) => {
-    // Where the tip should sit: viewport's left edge (in viewBox units) plus
-    // 55% of the visible width (1000 units).
-    // Over the last stretch the tip runs ahead of its anchor, so the thread
-    // reaches the button at the very end instead of stopping mid-screen.
-    const catchUp = Math.max(0, (progress - 0.9) / 0.1) * 150;
-    const targetX = progress * CANVAS_TRAVEL_VW * 10 + TIP_SCREEN_ANCHOR * 1000 + catchUp;
-    let i = 0;
-    while (i < count && (xs[i] ?? 0) < targetX) i += 1;
-    const length = lengths[i] ?? total;
+      progressRef.current = progress;
+      // Where the tip should sit: viewport's left edge (in viewBox units) plus
+      // 55% of the visible width (1000 units).
+      // Over the last stretch the tip runs ahead of its anchor, so the thread
+      // reaches the button at the very end instead of stopping mid-screen.
+      const catchUp = Math.max(0, (progress - 0.9) / 0.1) * 150;
+      const targetX = progress * CANVAS_TRAVEL_VW * 10 + TIP_SCREEN_ANCHOR * 1000 + catchUp;
+      let i = 0;
+      while (i < count && (xs[i] ?? 0) < targetX) i += 1;
+      const length = lengths[i] ?? total;
 
-    path.style.strokeDashoffset = `${1 - length / total}`;
-    tip.setAttribute("cx", `${xs[i]}`);
-    tip.setAttribute("cy", `${ys[i]}`);
-    tip.style.opacity = length <= 0 || length >= total * 0.999 ? "0" : "1";
+      path.style.strokeDashoffset = `${1 - length / total}`;
+      tip.setAttribute("cx", `${xs[i]}`);
+      tip.setAttribute("cy", `${ys[i]}`);
+      tip.style.opacity = length <= 0 || length >= total * 0.999 ? "0" : "1";
     };
-    draw(0);
+    draw(progressRef.current);
     return subscribe(draw);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [start]);
 
   return (
-    <svg aria-hidden="true" className="pointer-events-none absolute inset-0 h-full w-full overflow-visible" viewBox={`0 0 ${CANVAS_VW * 10} 1000`} preserveAspectRatio="none">
-      <path ref={pathRef} pathLength="1" style={{ strokeDashoffset: 1 }} d={THREAD} fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="1" />
-      <path className="animate-draw-string" style={{ animationDuration: "2.6s" }} pathLength="1" strokeDasharray="1" d={TANGLE} fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
-      <circle ref={tipRef} r="9" cx="569" cy="199" style={{ opacity: 0 }} className="fill-foreground" />
+    <svg aria-hidden="true" className="pointer-events-none absolute inset-0 h-full w-full animate-reveal overflow-visible [animation-delay:.9s]" viewBox={`0 0 ${CANVAS_VW * 10} 1000`} preserveAspectRatio="none">
+      <path ref={pathRef} pathLength="1" style={{ strokeDashoffset: 1 }} d={getThread().d} fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="1" />
+      <circle ref={tipRef} r="9" cx={start[0] * 10} cy={start[1] * 10} style={{ opacity: 0 }} className="fill-foreground" />
     </svg>
   );
 }
 
-function IntroScene({ contentRevealed, noteRevealed }: { contentRevealed: boolean; noteRevealed: boolean }) {
+// A line of text that rides on top of the thread, just before "a jack of all
+// trades". It follows the thread's curve and is uncovered left to right by the
+// thread tip, so it arrives in the same movement as the thread.
+const THREAD_TEXT = "a little bit about me";
+const THREAD_TEXT_FROM = 76;
+const THREAD_TEXT_TO = 118;
+
+function ThreadText({ subscribe }: { subscribe: Subscribe }) {
+  const clipRef = useRef<SVGRectElement>(null);
+  const progressRef = useRef(0);
+  const [size, setSize] = useState({ w: 0, h: 0 });
+
+  useEffect(() => {
+    const measure = () => setSize({ w: window.innerWidth, h: window.innerHeight });
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
+
+  // The stretch of thread under the text, in pixels (so the letters aren't stretched).
+  const d = useMemo(() => {
+    if (!size.w) return "";
+    const { xs, ys } = getThreadSamples();
+    let path = "";
+    for (let i = 0; i < xs.length; i += 1) {
+      const x = xs[i]! / 10;
+      if (x < THREAD_TEXT_FROM || x > THREAD_TEXT_TO) continue;
+      path += `${path ? "L" : "M"}${((x / 100) * size.w).toFixed(1)} ${((ys[i]! / 1000) * size.h).toFixed(1)} `;
+    }
+    return path;
+  }, [size]);
+
+  useEffect(() => {
+    const reveal = (progress: number) => {
+      progressRef.current = progress;
+      const tipVw = progress * CANVAS_TRAVEL_VW + TIP_SCREEN_ANCHOR * 100;
+      clipRef.current?.setAttribute("width", `${Math.max(0, (tipVw / 100) * size.w)}`);
+    };
+    reveal(progressRef.current);
+    return subscribe(reveal);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [size]);
+
+  if (!d) return null;
+  const fontSize = 52; // a bit smaller than "a jack of all trades" (text-6xl)
+  return (
+    <svg aria-hidden="true" className="pointer-events-none absolute left-0 top-0 h-full overflow-visible" style={{ width: `${CANVAS_VW}vw` }} viewBox={`0 0 ${CANVAS_VW * (size.w / 100)} ${size.h}`}>
+      <defs>
+        <clipPath id="thread-text-clip">
+          <rect ref={clipRef} x="0" y="0" width="0" height={size.h} />
+        </clipPath>
+      </defs>
+      <path id="thread-text-path" d={d} fill="none" />
+      <g clipPath="url(#thread-text-clip)">
+        <text className="fill-foreground font-serif" style={{ fontSize, letterSpacing: "0.06em" }} dy={-fontSize * 0.3}>
+          <textPath href="#thread-text-path" startOffset="2%">{THREAD_TEXT}</textPath>
+        </text>
+      </g>
+    </svg>
+  );
+}
+
+function IntroScene({ contentRevealed, noteRevealed, laptopRef }: { contentRevealed: boolean; noteRevealed: boolean; laptopRef: RefObject<HTMLImageElement | null> }) {
   return (
     <div className="absolute left-0 top-0 h-full w-screen">
+      {/* the laptop the cable charges from; its connector is where the thread begins */}
+      <img
+        ref={laptopRef}
+        src={portLaptop}
+        alt="a doodled laptop with hands typing, a charging cable plugged into its side"
+        width={612}
+        height={408}
+        draggable={false}
+        className="pointer-events-none absolute top-[17vh] h-auto max-w-none animate-reveal select-none [animation-delay:.2s]"
+        style={{ width: "min(46vw, 105vh)", left: "calc(50vw - min(46vw, 105vh) / 2)" }}
+      />
       <div className={cn("absolute bottom-10 left-8 transition-all duration-700 sm:bottom-8", contentRevealed ? "opacity-100" : "animate-reveal [animation-delay:2.2s]")}>
-        <p className="text-4xl font-semibold leading-[0.95] sm:text-5xl">the<br />anatomy of a<br /><span className="font-serif italic">curious developer.</span></p>
+<p className="text-[1.9rem] font-semibold leading-[0.95] sm:text-5xl">
+  professionally<br />
+  curious.<br />
+  personally <span className="font-serif italic">chaotic.</span>
+</p>
+        {/* <p className="mt-4 text-sm text-muted-foreground">software engineer · class of '26 · ai & full-stack</p> */}
       </div>
       <div className={cn("absolute left-[62%] top-28 flex max-w-56 origin-bottom-left items-start gap-2 text-sm text-muted-foreground transition-all duration-500", noteRevealed ? "opacity-100" : "animate-reveal [animation-delay:2.2s]")}>
         <svg aria-hidden="true" viewBox="0 0 40 30" className="mt-1 h-6 w-8 shrink-0"><path d="M38 4 C24 6 12 14 4 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" /><path d="M4 24 L13 22 M4 24 L7 15" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" /></svg>
-        <span>an almost accurate map of everything on my mind.</span>
+        <span>every tab i opened at 2am, drawn as one line.</span>
       </div>
       <div className={cn("absolute bottom-8 right-8 hidden text-right transition-all delay-150 duration-700 sm:block", contentRevealed ? "opacity-100" : "animate-reveal [animation-delay:2.35s]")}>
-        <p className="mb-4 text-sm">or do i say, welcome to my portfolio :)</p>
+        <p className="mb-4 text-sm">or, in plain words: welcome to my portfolio :)</p>
         <Button asChild variant="paper" className="mr-2"><a href="#work">view work</a></Button>
         <Button asChild variant="ink"><a href="#hi" data-cursor="i don't bite.">let's talk</a></Button>
       </div>
@@ -428,144 +568,48 @@ function Note({ x, y, className, at: revealAt, children }: { x: number; y: numbe
 
 // i tinker with a lot of stuff — a quiet line in the middle, the objects
 // scattered around it, and the thread looping between them.
+// TODO: the cat and the badminton racket are placeholders. swap them (and their
+// lines) for things that are really you: a pet, a sport, a hobby.
 function TinkerScene() {
   return (
     <div>
-      <span hidden data-mode="thread" data-at={112} data-say="careful. rabbit holes ahead." />
       <Note x={120} y={42} className="reveal w-[38vw] text-center" at={122}>
         <p className="text-lg text-muted-foreground">i tinker with a lot of stuff.</p>
         <h2 className="whitespace-nowrap font-serif text-6xl leading-tight">a jack of all trades</h2>
-        <p className="mt-2 text-lg text-muted-foreground">what a cool way to say i fall down rabbit holes.</p>
+        <p className="mt-2 text-lg text-muted-foreground">and a master of "wait, let me just try one thing."</p>
       </Note>
-      <Object src={laptop} alt="a laptop covered in stickers" label="this is where most things begin." style={at(106, 19)} size="sm" delay="0s" />
-      <Object src={camera} alt="an instant camera" label="i like keeping little pieces of time." style={at(104, 60)} size="sm" delay=".6s" />
-      <Object src={cat} alt="a cat wearing sunglasses" label="head of distraction." style={at(124, 68)} size="sm" delay="1.2s" />
-      <Object src={keys} alt="a set of keycaps" label="one more idea. just one." style={at(136, 18)} size="sm" delay=".3s" />
-      <Object src={badminton} alt="a badminton racket and shuttle" label="let's do a match?" style={at(150, 68)} size="sm" delay="1.5s" />
-      <Climber />
+      <Object src={paint} alt="a painting palette and a brush" label="My kind of therapy." style={at(106, 19)} size="sm" delay="0s" />
+      <Object src={dance} alt="ghungroo" label="9 years, countless rhythms." style={at(104, 60)} size="sm" delay=".6s" />
+      <Object src={book} alt="a book and pen" label="I like writing my thoughts down." style={at(124, 68)} size="sm" delay="1.2s" />
+      <Object src={comic} alt="comics" label="just one more chapter." style={at(136, 18)} size="sm" delay=".3s" />
+      <Object src={badminton} alt="a badminton racket and shuttle" label="loser buys chai." style={at(150, 68)} size="sm" delay="1.5s" />
     </div>
   );
 }
 
-// The stretch of thread the climber can travel along, in vw.
-const CLIMB_FROM = 157;
-// Down the slope past the heading, all the way to the web3 globe.
-const CLIMB_TO = 197;
-// How close (vh) the pointer must be to the thread for her to follow it.
-const CLIMB_REACH = 14;
-const CLIMB_START = 174.5;
-// Where her hands are inside the image, as a fraction of its box.
-const GRIP_X = 0.57;
-const GRIP_Y = 0.2;
-const CLIMBER_W = 9;
-const CLIMBER_H = 18;
-
 // Points on the thread between two x positions, as (x, y) pairs in vw/vh.
 function sampleThread(from: number, to: number) {
   const { xs: allX, ys: allY } = getThreadSamples();
+  from += THREAD_SHIFT;
+  to += THREAD_SHIFT;
   const xs: number[] = [];
   const ys: number[] = [];
   for (let i = 0; i < allX.length; i += 1) {
     const x = allX[i]! / 10;
     if (x >= from - 1 && x <= to + 1) {
-      xs.push(x);
+      xs.push(x - THREAD_SHIFT);
       ys.push(allY[i]! / 10);
     }
   }
   return { xs, ys };
 }
 
-// The climber hangs from the thread itself and swings gently from her grip.
-// Move the pointer along the thread and she climbs after it, hand over hand —
-// tilting with the slope — as far as the web3 globe. It listens to the whole
-// window rather than a hit box, so it never blocks the heading or the globe.
-function Climber() {
-  const originRef = useRef<HTMLDivElement>(null);
-  const samples = useRef<{ xs: number[]; ys: number[] } | null>(null);
-  const target = useRef(CLIMB_START);
-  const current = useRef(CLIMB_START);
-  const frame = useRef(0);
-  const [pose, setPose] = useState({ x: CLIMB_START, y: 35.6, angle: 0, reach: 0 });
-
-  const yAt = (x: number) => {
-    const s = samples.current;
-    if (!s || s.xs.length === 0) return 35.6;
-    let i = 0;
-    while (i < s.xs.length - 1 && (s.xs[i + 1] ?? 0) < x) i += 1;
-    return s.ys[i] ?? 35.6;
-  };
-
-  const place = (x: number, reach: number) => {
-    const y = yAt(x);
-    // Slope in screen pixels, so the tilt matches what you see.
-    const dy = (yAt(x + 0.5) - yAt(x - 0.5)) * window.innerHeight;
-    const dx = window.innerWidth;
-    // Follow the slope, but not so far she's lying flat on the steep drop.
-    const angle = Math.max(-28, Math.min(28, ((Math.atan2(dy, dx) * 180) / Math.PI) * 0.6));
-    setPose({ x, y, angle, reach });
-  };
-
-  useEffect(() => {
-    samples.current = sampleThread(CLIMB_FROM, CLIMB_TO);
-    place(CLIMB_START, 0);
-    // The origin div sits at CLIMB_FROM on the canvas, so its left edge maps
-    // the pointer into canvas vw; the canvas is viewport-tall, so y is just vh.
-    const follow = (event: PointerEvent) => {
-      const origin = originRef.current;
-      if (!origin) return;
-      const x = CLIMB_FROM + ((event.clientX - origin.getBoundingClientRect().left) / window.innerWidth) * 100;
-      const y = (event.clientY / window.innerHeight) * 100;
-      if (x < CLIMB_FROM - 2 || x > CLIMB_TO + 2 || Math.abs(y - yAt(Math.min(CLIMB_TO, Math.max(CLIMB_FROM, x)))) > CLIMB_REACH) return;
-      target.current = Math.min(CLIMB_TO, Math.max(CLIMB_FROM, x));
-      if (!frame.current) frame.current = requestAnimationFrame(climb);
-    };
-    window.addEventListener("pointermove", follow, { passive: true });
-    return () => {
-      window.removeEventListener("pointermove", follow);
-      cancelAnimationFrame(frame.current);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // Move a little each frame, like pulling along the thread, not teleporting.
-  const climb = () => {
-    const gap = target.current - current.current;
-    if (Math.abs(gap) < 0.05) {
-      place(current.current, 0);
-      frame.current = 0;
-      return;
-    }
-    current.current += Math.sign(gap) * Math.min(Math.abs(gap), 0.12);
-    place(current.current, Math.sin(current.current * 3));
-    frame.current = requestAnimationFrame(climb);
-  };
-
-  return (
-    <div ref={originRef} className="pointer-events-none absolute" style={at(CLIMB_FROM, 22)}>
-      <div
-        className="pointer-events-auto absolute"
-        style={{
-          left: `${pose.x - CLIMB_FROM - GRIP_X * CLIMBER_W}vw`,
-          top: `${pose.y - 22 - GRIP_Y * CLIMBER_H}vh`,
-          width: `${CLIMBER_W}vw`,
-          height: `${CLIMBER_H}vh`,
-          transformOrigin: `${GRIP_X * 100}% ${GRIP_Y * 100}%`,
-          // While climbing she rocks side to side with each hand-over-hand pull.
-          transform: `rotate(${pose.angle + pose.reach * 7}deg) translateY(${Math.abs(pose.reach) * -0.6}vh)`,
-        }}
-      >
-        <div className={cn("h-full w-full", pose.reach === 0 && "animate-hang")}>
-          <Figure src={climber} alt="someone hanging from the thread" label="apparently i like climbing things." size="fill" still labelStyle={{ rotate: `${-(pose.angle + pose.reach * 7)}deg` }} />
-        </div>
-      </div>
-    </div>
-  );
-}
-
+// TODO: swap these three images for something that fits each line
+// (an eye or a camera, a mic or a crowd, a brain is fine as it is).
 const heart = [
-  { src: globe, alt: "a globe wrapped in orbits", x: 200, y: 56, title: "web3 came first.", body: "got curious about systems that don't need one person in charge.", label: "yes, i'm still here." },
-  { src: headphones, alt: "a pair of headphones", x: 224, y: 22, title: "turns out, i like people too.", body: "explaining things is pretty fun too.", label: "docs, talks, demos, communities." },
-  { src: brain, alt: "a brain", x: 260, y: 60, title: "and now, AI.", body: "half engineer. half “what if?”", label: "still trying to understand this thing." },
+  { src: iot, alt: "iot", x: 200, y: 56, title: "IOT came first", body: "a little coding, a handful of components, and the joy of making things work in the real world.", label: "" },
+  { src: mic, alt: "mic", x: 224, y: 22, title: "people & purpose.", body: "i enjoy teaching, volunteering, and helping people learn.", label: "Communities, events, Workshops" },
+  { src: brain, alt: "a brain", x: 260, y: 60, title: "AI agents, lately", body: "learning, experimenting, and building along the way.", label: "still learning this one. out loud." },
 ];
 
 // but few things have my heart — each one an object with a big line and a
@@ -588,21 +632,25 @@ function HeartScene() {
   );
 }
 
-// One beat per year, told like a story: a short line that moves it forward,
+// One beat at a time, told like a story: a short line that moves it forward,
 // and the detail underneath for anyone who wants it.
+// Entries with no year happened in the same year as the one before them.
 const timeline = [
-  { year: "2021", title: "started a company at 17.", line: "Alphonse Esports — tournaments, teams, and a lot of learning on the job, mid-COVID." },
-  { year: "2022", title: "went back to school.", line: "computer science at SMVIT. kept building things on the side." },
-  { year: "2023", title: "found web3.", line: "the tech was weird. naturally, i stayed." },
-  { year: "2024", title: "started shipping.", line: "smart contracts, hackathons, open-source experiments." },
-  { year: "2025", title: "brought people along.", line: "workshops, mentoring, and a few ambassador badges." },
-  { year: "2026", title: "then, AI happened.", line: "now keeping AI agents reliable in production." },
+  { year: "2022", title: "curiosity called.", line: "started cse at icfai tech." },
+  { year: "2023", title: "things came alive.", line: "first projects and iot experiments." },
+  { year: "2024", title: "first real code.", line: "software development trainee at codeplayers." },
+  { year: "2025", title: "brought people along.", line: "started gdg on campus; grew to 100+ students." },
+  { year: "2025", title: "podium twice.", line: "runner-up at aws genai; 3rd at internal sih." },
+  { year: "2026", title: "teaching machines.", line: "Ai intern at nu10, working on ocr." },
+  { year: "2026", title: "defence diaries.", line: "intern at ordnance factory medak; built dashboards." },
+  { year: "now", title: "making ai verify.", line: "building evidence-driven ai agents." },
 ];
 const TIMELINE_FROM = 304;
-const TIMELINE_STEP = 18;
+// 8 entries fit between the "somehow" line and the loop at this spacing.
+const TIMELINE_STEP = 13;
 const STEM = 11;
 
-// The thread curves gently through the years. Each year hangs off it on a thin
+// The thread curves gently through the years. Each one hangs off it on a thin
 // stem — alternating above and below — and only appears once the thread
 // arrives. Underneath, what all of it keeps adding up to.
 function TimelineScene() {
@@ -627,37 +675,29 @@ function TimelineScene() {
         const y = ys[index] ?? 50;
         const up = index % 2 === 1;
         return (
-          <div key={stop.year + stop.title} className="reveal" data-at={x}>
+          <div key={stop.title} className="reveal" data-at={x}>
             <span className="absolute w-px bg-muted-foreground/60" style={{ left: `${x}vw`, top: `${up ? y - STEM : y}vh`, height: `${STEM}vh` }} />
             <span className="absolute h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-muted-foreground" style={{ left: `calc(${x}vw + 0.5px)`, top: `${up ? y - STEM : y + STEM}vh` }} />
-            <Note x={x} y={up ? y - STEM - 2 : y + STEM + 2} className={cn("w-64 -translate-x-1/2 text-center leading-snug", up && "-translate-y-full")}>
+            <Note x={x} y={up ? y - STEM - 2 : y + STEM + 2} className={cn("w-[min(16rem,24vw)] -translate-x-1/2 text-center leading-snug", up && "-translate-y-full")}>
               <p className="text-lg">{stop.title}</p>
               <p className="text-muted-foreground">{stop.line}</p>
-              <p className="mt-1 text-sm text-muted-foreground/80">{stop.year}</p>
+              {stop.year && <p className="mt-1 text-sm text-muted-foreground/80">{stop.year}</p>}
             </Note>
           </div>
         );
       })}
-      {/* Each phrase fades in as the thread passes over it, like the years. */}
-      <Note x={302} y={84} className="reveal" at={302}><p className="whitespace-nowrap font-serif text-5xl">somehow, <span className="text-muted-foreground">i keep ending up...</span></p></Note>
-      <Note x={346} y={84} className="reveal" at={346}><p className="whitespace-nowrap font-serif text-5xl"><span className="text-muted-foreground">taking</span> ownership.</p></Note>
-      <Note x={380} y={83} className="reveal w-[25rem] text-lg leading-snug" at={380}>
-        <p>most things i got curious about, i ended up building.</p>
-        <p className="text-muted-foreground">most things i built, i ended up looking after.</p>
-      </Note>
     </div>
   );
 }
-
 // The habit that keeps repeating, told as a cycle: the thread ties one big
 // loop beside the line, and the four steps sit around it in the order the
 // thread draws them — bottom, right, top, left — with "repeat." in the middle.
 const LOOP_RX = LOOP_R / LOOP_ASPECT;
 const habit = [
-  { step: "notice it.", x: LOOP_X, y: LOOP_Y, place: "below" },
-  { step: "understand it.", x: LOOP_X + LOOP_RX, y: LOOP_Y - LOOP_R, place: "right" },
-  { step: "build it.", x: LOOP_X, y: LOOP_Y - 2 * LOOP_R, place: "above" },
-  { step: "hand it over.", x: LOOP_X - LOOP_RX, y: LOOP_Y - LOOP_R, place: "left" },
+  { step: "Identify", x: LOOP_X, y: LOOP_Y, place: "below" },
+  { step: "Explore", x: LOOP_X + LOOP_RX, y: LOOP_Y - LOOP_R, place: "right" },
+  { step: "Understand", x: LOOP_X, y: LOOP_Y - 2 * LOOP_R, place: "above" },
+  { step: "Build", x: LOOP_X - LOOP_RX, y: LOOP_Y - LOOP_R, place: "left" },
 ] as const;
 
 const habitLabel = {
@@ -673,9 +713,9 @@ function ApparentlyScene() {
   const looped = LOOP_X + LOOP_RX + 1;
   return (
     <div>
-      <span hidden data-mode="thread" data-at={looped} data-say="yes, it's a loop. i'm aware." />
+      <span hidden data-mode="thread" data-at={looped} data-say="yes, it's a loop. i tested it." />
       <Note x={428} y={22} className="reveal w-[32rem]" at={428}>
-        <p className="font-serif text-6xl leading-[1.05]">apparently, <span className="text-muted-foreground">i don't know how to leave things alone.</span></p>
+        <p className="font-serif text-6xl leading-[1.05]">apparently, <span className="text-muted-foreground">"just curious" is how it always starts.</span></p>
       </Note>
       {habit.map(({ step, x, y, place }, index) => (
         <div key={step} className="reveal" data-mode="thread" data-at={looped} style={{ "--reveal-delay": `${index * 0.25}s` } as CSSProperties}>
@@ -696,8 +736,8 @@ function EnoughScene({ onWork }: { onWork: () => void }) {
     <>
       <span hidden data-mode="thread" data-at={BUTTON_X - 8} data-say="go on. it's the good part." />
       <Note x={BUTTON_X + 4.6} y={BUTTON_Y - 6} className="reveal w-[46vw] -translate-x-1/2 -translate-y-full text-center" at={BUTTON_X - 14}>
-        <p className="text-lg text-muted-foreground">enough autobiography.</p>
-        <h2 className="mt-3 font-serif text-6xl">let's look at what came out of it.</h2>
+        <p className="text-lg text-muted-foreground">okay, enough about me.</p>
+        <h2 className="mt-3 font-serif text-6xl leading-[1.05]">let's see what<br />came out of it.</h2>
       </Note>
       <div className="absolute -translate-y-1/2" style={at(BUTTON_X, BUTTON_Y)}>
         <Button variant="ink" onClick={onWork} data-cursor="show me the work ↓">see the work <ArrowDown className="ml-2 h-4 w-4" /></Button>
@@ -706,7 +746,7 @@ function EnoughScene({ onWork }: { onWork: () => void }) {
   );
 }
 
-const figureSizes = { fill: "h-full w-full", sm: "h-36 w-36 lg:h-44 lg:w-44", md: "h-44 w-44 lg:h-56 lg:w-56", lg: "h-52 w-52 lg:h-64 lg:w-64" };
+const figureSizes = { fill: "h-full w-full", xs: "h-28 w-28", sm: "h-36 w-36 lg:h-44 lg:w-44", md: "h-44 w-44 lg:h-56 lg:w-56", lg: "h-52 w-52 lg:h-64 lg:w-64" };
 
 // Each object keeps its own little confession. It types itself out on hover and
 // springs back into hiding the moment the cursor leaves. The object tilts toward
@@ -837,10 +877,10 @@ function Object({ src, alt, label, style, delay, size, labelBelow }: { src: stri
 const MOBILE_LOOP = 70;
 
 // An object pinned in a mobile block, with the thread passing through its middle.
-function MobileObject({ src, alt, label, style, delay }: { src: string; alt: string; label: string; style: CSSProperties; delay: string }) {
+function MobileObject({ src, alt, label, style, delay, size = "sm" }: { src: string; alt: string; label: string; style: CSSProperties; delay: string; size?: "xs" | "sm" }) {
   return (
     <div className="absolute" style={style}>
-      <Figure src={src} alt={alt} label={label} size="sm" delay={delay} />
+      <Figure src={src} alt={alt} label={label} size={size} delay={delay} />
       <span data-anchor className="absolute left-1/2 top-1/2" />
     </div>
   );
@@ -851,89 +891,27 @@ function Anchor({ x, y, loop }: { x: string; y: number | string; loop?: number }
   return <span data-anchor={loop ?? ""} className="absolute" style={{ left: x, top: y }} />;
 }
 
-// The climber's stretch of thread on mobile: it runs from left to right
-// between these heights (px within the tinker block).
-const CLIMB_Y0 = 1260;
-const CLIMB_Y1 = 1300;
-// The mobile thread's points (in story coordinates), shared with the climber.
-let mobileThread: ThreadSamples | null = null;
-
-// On phones, hold the climber and drag her along her stretch of thread.
-// Only she captures the finger, so the rest of the page still scrolls.
-function MobileClimber() {
-  const ref = useRef<HTMLDivElement>(null);
-  const [pos, setPos] = useState(0.55);
-  const [grip, setGrip] = useState<{ x: number; y: number } | null>(null);
-  const [dragging, setDragging] = useState(false);
-  // Put her hands on the drawn thread, at the point nearest the finger
-  // along her stretch.
-  const move = (clientX: number) => {
-    const block = ref.current?.parentElement;
-    const root = block?.parentElement;
-    if (!block || !root || !mobileThread) return;
-    const r = block.getBoundingClientRect();
-    const x = Math.min(r.width * 0.84, Math.max(r.width * 0.2, clientX - r.left));
-    const { xs, ys } = mobileThread;
-    const top = block.offsetTop;
-    let best = -1;
-    for (let i = 0; i < xs.length; i += 1) {
-      const y = (ys[i] ?? 0) - top;
-      const px = xs[i] ?? 0;
-      if (y < CLIMB_Y0 - 90 || y > CLIMB_Y1 + 90 || px < r.width * 0.2 || px > r.width * 0.84) continue;
-      if (best < 0 || Math.abs((xs[i] ?? 0) - x) < Math.abs((xs[best] ?? 0) - x)) best = i;
-    }
-    if (best < 0) return;
-    setPos((xs[best] ?? 0) / r.width);
-    setGrip({ x: xs[best] ?? 0, y: (ys[best] ?? 0) - top });
-  };
-  const y = grip ? grip.y : CLIMB_Y0 + (CLIMB_Y1 - CLIMB_Y0) * pos + Math.sin(pos * Math.PI) * 14;
-  return (
-    <div
-      ref={ref}
-      className="absolute h-[156px] w-24 touch-none"
-      style={{ left: grip ? grip.x : `${pos * 100}%`, top: y, translate: `-${GRIP_X * 100}% -${GRIP_Y * 100}%`, transition: dragging ? "none" : "left .4s, top .4s" }}
-      onPointerDown={(e) => {
-        e.currentTarget.setPointerCapture(e.pointerId);
-        setDragging(true);
-      }}
-      onPointerMove={(e) => dragging && move(e.clientX)}
-      onPointerUp={() => setDragging(false)}
-      onPointerCancel={() => setDragging(false)}
-    >
-      <Figure
-        src={climber}
-        alt="someone hanging from the thread"
-        label="apparently i like climbing things."
-        size="fill"
-        hang={!dragging}
-        still={dragging}
-        // wherever she's climbed to, keep her bubble on screen
-        labelStyle={pos < 0.35 ? { left: 0, translate: "none" } : pos > 0.65 ? { left: "auto", right: 0, translate: "none" } : {}}
-      />
-    </div>
-  );
-}
-
 function MobileStory({ ready, onWork }: { ready: boolean; onWork: () => void }) {
   const rootRef = useRef<HTMLDivElement>(null);
-  const tangleRef = useRef<SVGSVGElement>(null);
+  const laptopImgRef = useRef<HTMLImageElement>(null);
   const pathRef = useRef<SVGPathElement>(null);
   const tipRef = useRef<SVGCircleElement>(null);
   const samplesRef = useRef<ThreadSamples | null>(null);
   const [geo, setGeo] = useState<{ d: string; w: number; h: number } | null>(null);
 
-  // Trace the thread through every anchor, starting at the tangle's loose end.
+  // Trace the thread through every anchor, starting at the laptop's connector.
   useEffect(() => {
     const measure = () => {
       const root = rootRef.current;
-      const svg = tangleRef.current;
-      if (!root || !svg || root.offsetParent === null) return;
+      const img = laptopImgRef.current;
+      if (!root || !img || root.offsetParent === null) return;
       const r = root.getBoundingClientRect();
-      const t = svg.getBoundingClientRect();
-      // The tangle's viewBox is 550×600 from (250,100), scaled to fit and
-      // centred; its loose end is at (569,199).
-      const k = Math.min(t.width / 550, t.height / 600);
-      const points: Waypoint[] = [[t.left - r.left + (t.width - 550 * k) / 2 + 319 * k, t.top - r.top + (t.height - 600 * k) / 2 + 99 * k]];
+      // Layout offsets, not the bounding rect: the picture is still fading in
+      // (and shifted 12px) when this first runs.
+      const box = img.offsetParent as HTMLElement | null;
+      const sx = (box?.offsetLeft ?? 0) + img.offsetLeft + img.offsetWidth * LAPTOP_PORT.x;
+      const sy = (box?.offsetTop ?? 0) + img.offsetTop + img.offsetHeight * LAPTOP_PORT.y;
+      const points: Waypoint[] = [[sx, sy], [sx + 16, sy + 8]];
       root.querySelectorAll<HTMLElement>("[data-anchor]").forEach((el) => {
         const a = el.getBoundingClientRect();
         const loop = Number(el.dataset["anchor"]);
@@ -941,13 +919,17 @@ function MobileStory({ ready, onWork }: { ready: boolean; onWork: () => void }) 
       });
       const segments = threadSegments(points, 1, 1);
       samplesRef.current = sampleSegments(segments, 24);
-      mobileThread = samplesRef.current;
       setGeo({ d: segmentsPath(segments), w: r.width, h: r.height });
     };
     measure();
     void document.fonts?.ready.then(measure);
+    const img = laptopImgRef.current;
+    img?.addEventListener("load", measure);
     window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
+    return () => {
+      img?.removeEventListener("load", measure);
+      window.removeEventListener("resize", measure);
+    };
   }, []);
 
   // Draw the thread down to ~70% of the screen as you scroll, like a pen
@@ -955,6 +937,10 @@ function MobileStory({ ready, onWork }: { ready: boolean; onWork: () => void }) 
   useEffect(() => {
     if (!geo) return;
     let frame = 0;
+    // The thread is already out of the laptop, down to the bottom of the first
+    // screen, the moment the laptop appears; scrolling carries it on.
+    const intro = window.innerHeight * 0.8;
+    const bonus = window.innerHeight * 0.3;
     const draw = () => {
       frame = 0;
       const root = rootRef.current;
@@ -963,10 +949,10 @@ function MobileStory({ ready, onWork }: { ready: boolean; onWork: () => void }) 
       const samples = samplesRef.current;
       if (!root || !path || !tip || !samples) return;
       const { xs, ys, lengths, total } = samples;
-      // Nothing leaves the tangle until you scroll; then the thread grows with
-      // the scroll until it catches up with ~70% down the screen.
+      // Beyond the first screen the thread grows with the scroll, like a pen
+      // following your thumb.
       const top = root.getBoundingClientRect().top;
-      const reach = Math.min(window.innerHeight * 0.7 - top, (ys[0] ?? 0) + Math.max(0, -top) * 1.4);
+      const reach = Math.min(window.innerHeight * 0.7 + bonus - top, (ys[0] ?? 0) + intro + Math.max(0, -top) * 1.4);
       let i = 0;
       while (i < xs.length - 1 && (ys[i] ?? 0) < reach) i += 1;
       const length = lengths[i] ?? 0;
@@ -1019,49 +1005,53 @@ function MobileStory({ ready, onWork }: { ready: boolean; onWork: () => void }) 
   return (
     <div ref={rootRef} className="relative overflow-hidden md:hidden">
       {geo && (
-        <svg aria-hidden="true" className={cn("pointer-events-none absolute left-0 top-0 transition-opacity duration-700", ready ? "opacity-100" : "opacity-0")} width={geo.w} height={geo.h} viewBox={`0 0 ${geo.w} ${geo.h}`}>
+        <svg aria-hidden="true" className="pointer-events-none absolute left-0 top-0 animate-reveal [animation-delay:.2s]" width={geo.w} height={geo.h} viewBox={`0 0 ${geo.w} ${geo.h}`}>
           <path ref={pathRef} d={geo.d} pathLength="1" strokeDasharray="1" style={{ strokeDashoffset: 1 }} fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
           <circle ref={tipRef} r="4.5" cx="0" cy="0" style={{ opacity: 0 }} className="fill-foreground" />
         </svg>
       )}
 
-      {/* the anatomy of a curious developer */}
-      <div className="relative h-[132svh]">
-        <svg ref={tangleRef} aria-hidden="true" viewBox="250 100 550 600" className="absolute inset-x-0 top-[27svh] h-[50svh] w-full overflow-visible">
-          <path className="animate-draw-string" style={{ animationDuration: "2.6s" }} pathLength="1" strokeDasharray="1" d={TANGLE} fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
-        </svg>
-        <div className={cn("absolute right-5 top-[17svh] flex w-44 items-start gap-1.5 text-[0.8rem] leading-snug text-muted-foreground", ready ? "opacity-100" : "animate-reveal [animation-delay:2.2s]")}>
+      {/* professionally curious. personally chaotic. */}
+      <div className="relative h-[max(calc(100svh+1rem),calc(33svh+61.3vw+17.5rem))]">
+        <img
+          ref={laptopImgRef}
+          src={portLaptop}
+          alt="a doodled laptop with hands typing, a charging cable plugged into its side"
+          width={612}
+          height={408}
+          draggable={false}
+          className="pointer-events-none absolute left-[4vw] top-[33svh] h-auto w-[92vw] max-w-none animate-reveal select-none [animation-delay:.2s]"
+        />
+        <div className={cn("absolute right-5 top-[23svh] flex w-44 items-start gap-1.5 text-[0.8rem] leading-snug text-muted-foreground", ready ? "opacity-100" : "animate-reveal [animation-delay:2.2s]")}>
           <svg aria-hidden="true" viewBox="0 0 40 30" className="mt-4 h-5 w-7 shrink-0"><path d="M38 4 C24 6 12 14 4 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" /><path d="M4 24 L13 22 M4 24 L7 15" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" /></svg>
-          <span>an almost accurate map of everything on my mind.</span>
+          <span>every tab i opened at 2am, drawn as one line.</span>
         </div>
-        <p className={cn("absolute left-5 top-[90svh] text-[2.6rem] font-semibold leading-[0.95]", ready ? "opacity-100" : "animate-reveal [animation-delay:2.2s]")}>the<br />anatomy of a<br /><span className="font-serif italic">curious developer.</span></p>
-        <Anchor x="86%" y="66svh" />
-        <Anchor x="93%" y="122svh" />
+        <div className={cn("absolute left-5 top-[calc(33svh+61.3vw+8rem)]", ready ? "opacity-100" : "animate-reveal [animation-delay:2.2s]")}>
+          <p className="text-[1.9rem] font-semibold leading-[0.95]">professionally<br />curious.<br />personally <span className="font-serif italic">chaotic.</span></p>
+          {/* <p className="mt-3 text-sm text-muted-foreground">software engineer · class of '26</p> */}
+        </div>
+        <Anchor x="86%" y="calc(33svh + 61.3vw + 1.5rem)" />
+        <Anchor x="93%" y="calc(33svh + 61.3vw + 15.5rem)" />
       </div>
 
-      {/* i tinker with a lot of stuff — objects spread out on alternating sides */}
-      <div className="relative h-[1500px]">
-        <span data-say="careful. rabbit holes ahead." className="absolute left-0 top-0 h-px w-px" />
-        <MobileObject src={laptop} alt="a laptop covered in stickers" label="this is where most things begin." style={{ left: "3%", top: 20 }} delay="0s" />
-        <MobileObject src={keys} alt="a set of keycaps" label="one more idea. just one." style={{ right: "5%", top: 190 }} delay=".4s" />
-        <Anchor x="95%" y={400} />
-        <div className="reveal absolute inset-x-0 top-[420px] mx-auto max-w-[17rem] text-center">
+      {/* i tinker with a lot of stuff — everything fits in one phone frame, objects around the words */}
+      <div className="relative h-[max(100svh,760px)]">
+        <MobileObject size="xs" src={paint} alt="a painting palette and a brush" label="My kind of therapy." style={{ left: "4%", top: "14%" }} delay="0s" />
+        <MobileObject size="xs" src={comic} alt="manga" label="just one more chapter." style={{ right: "4%", top: "22%" }} delay=".4s" />
+        <Anchor x="93%" y="37%" />
+        <div className="reveal absolute inset-x-0 top-[39%] mx-auto max-w-[17rem] text-center">
           <p className="text-muted-foreground">i tinker with a lot of stuff.</p>
           <h2 className="mt-1 whitespace-nowrap font-serif text-[2.1rem] leading-tight">a jack of all trades</h2>
-          <p className="mt-1 text-sm text-muted-foreground">what a cool way to say i fall down rabbit holes.</p>
+          <p className="mt-1 text-balance text-sm text-muted-foreground">and a master of "wait, let me just try one thing."</p>
         </div>
-        <Anchor x="95%" y={590} />
-        <MobileObject src={camera} alt="an instant camera" label="i like keeping little pieces of time." style={{ left: "4%", top: 630 }} delay=".8s" />
-        <MobileObject src={cat} alt="a cat wearing sunglasses" label="head of distraction." style={{ right: "3%", top: 820 }} delay="1.2s" />
-        <MobileObject src={badminton} alt="a badminton racket and shuttle" label="competitive. occasionally." style={{ left: "6%", top: 1010 }} delay="1.6s" />
-        {/* the climber gets her own stretch of thread to be dragged along */}
-        <Anchor x="4%" y={CLIMB_Y0} />
-        <MobileClimber />
-        <Anchor x="96%" y={CLIMB_Y1} />
+        <Anchor x="93%" y="52%" />
+        <MobileObject size="xs" src={badminton} alt="a badminton racket and shuttle" label="loser buys chai." style={{ right: "5%", top: "54%" }} delay="1.2s" />
+        <MobileObject size="xs" src={dance} alt="ghungroo" label="9 years, countless rhythms." style={{ left: "5%", top: "62%" }} delay=".8s" />
+        <MobileObject size="xs" src={book} alt="a book and pen" label="I like writing my thoughts down.”" style={{ left: "46%", top: "76%" }} delay="1.6s" />
       </div>
 
       {/* but few things have my heart — object above its words, alternating sides */}
-      <div className="relative px-5 pt-6">
+      <div className="relative px-5 pt-16">
         <span data-say="okay, the soft part." className="absolute left-0 top-0 h-px w-px" />
         <Anchor x="5%" y={0} />
         <Anchor x="5%" y={110} />
@@ -1074,10 +1064,10 @@ function MobileStory({ ready, onWork }: { ready: boolean; onWork: () => void }) 
                 <Figure src={h.src} alt={h.alt} label={h.label} size="sm" delay={`${index * 0.5}s`} />
                 <span data-anchor className="absolute left-1/2 top-1/2" />
               </div>
-              <p className="font-serif text-2xl leading-tight">{h.title}</p>
-              <p className="mt-1 text-sm leading-snug text-muted-foreground">{h.body}</p>
+              <p className="font-serif text-2xl leading-tight [text-shadow:0_0_5px_var(--background),0_0_5px_var(--background),0_0_9px_var(--background),0_0_9px_var(--background)]">{h.title}</p>
+              <p className="mt-1 text-sm leading-snug text-muted-foreground [text-shadow:0_0_5px_var(--background),0_0_5px_var(--background),0_0_9px_var(--background),0_0_9px_var(--background)]">{h.body}</p>
               {/* leave along the outer edge, below the words */}
-              <Anchor x={right ? "calc(100% + 0.25rem)" : "-0.25rem"} y="calc(100% + 0.75rem)" />
+              <Anchor x={right ? "calc(100% + 0.25rem)" : "-0.9rem"} y="calc(100% + 0.75rem)" />
             </div>
           );
         })}
@@ -1087,53 +1077,52 @@ function MobileStory({ ready, onWork }: { ready: boolean; onWork: () => void }) 
       <div className="relative mt-20 px-5">
         <span data-say="the short version. very short." className="absolute left-0 top-20 h-px w-px" />
         <Anchor x="6%" y={-20} />
-        <p className="reveal mx-auto max-w-[18rem] text-center font-serif text-[2rem] leading-tight">somehow,<br /><span className="text-muted-foreground">i keep ending up...</span></p>
         <ol className="relative mt-10 pl-9">
-          {timeline.map((stop) => (
-            <li key={stop.year + stop.title} className="reveal relative pb-7">
-              <span data-anchor className="absolute -left-[1.1rem] top-[0.7rem]" />
-              <span aria-hidden="true" className="absolute -left-[1.1rem] top-[0.7rem] h-px w-3 bg-muted-foreground/60" />
-              <span aria-hidden="true" className="absolute left-[-0.4rem] top-[0.55rem] h-1.5 w-1.5 rounded-full bg-muted-foreground" />
+          {timeline.map((stop, i) => {
+            // The thread sways side to side between the years. Every year keeps the same
+            // hyphen and dot, so the whole row shifts with the thread instead.
+            const shift = Math.sin(i * 0.7) * 0.8;
+            return (
+            <li key={stop.year + stop.title} className="reveal relative pb-7" style={{ marginLeft: `${shift}rem` }}>
+              <span data-anchor className="absolute -left-[2.2rem] top-[0.7rem]" />
+              <span aria-hidden="true" className="absolute -left-[2.2rem] top-[0.7rem] h-px w-[1.3rem] bg-muted-foreground/60" />
+              <span aria-hidden="true" className="absolute left-[-1rem] top-[0.55rem] h-1.5 w-1.5 rounded-full bg-muted-foreground" />
               <p>{stop.title}</p>
               <p className="text-sm leading-snug text-muted-foreground">{stop.line}</p>
               <p className="mt-0.5 text-xs text-muted-foreground/80">{stop.year}</p>
             </li>
-          ))}
+            );
+          })}
         </ol>
         <Anchor x="6%" y="100%" />
       </div>
       <div className="relative px-5 pt-4">
-        <p className="reveal text-center font-serif text-[2rem]"><span className="text-muted-foreground">...taking</span> ownership.</p>
-        <div className="reveal mx-auto mt-3 max-w-[19rem] text-center text-sm leading-snug">
-          <p>most things i got curious about, i ended up building.</p>
-          <p className="text-muted-foreground">most things i built, i ended up looking after.</p>
-        </div>
         <Anchor x="5%" y="calc(100% + 1rem)" />
       </div>
 
-      {/* apparently, i don't know how to leave things alone — tied in a loop */}
+      {/* apparently, i can't stop at "it works" — tied in a loop */}
       <div className="relative mt-16 px-5">
         <Anchor x="89%" y={-24} />
         <Anchor x="90%" y={150} />
-        <p className="reveal font-serif text-[2.3rem] leading-[1.05]">apparently, <span className="text-muted-foreground">i don't know how to leave things alone.</span></p>
+        <p className="reveal font-serif text-[2.3rem] leading-[1.05]">apparently, <span className="text-muted-foreground">"just curious" is how it always starts.</span></p>
         <div className="reveal relative mt-4 h-[270px]">
-          <span data-say="yes, it's a loop. i'm aware." className="absolute left-0 top-1/2 h-px w-px" />
+          <span data-say="yes, it's a loop. i tested it." className="absolute left-0 top-1/2 h-px w-px" />
           <Anchor x="86%" y={205} />
           <Anchor x="50%" y={230} loop={MOBILE_LOOP} />
-          <span className="absolute -translate-x-1/2 translate-y-3 whitespace-nowrap text-sm" style={{ left: "50%", top: 230 }}>notice it.</span>
-          <span className="absolute -translate-y-1/2 whitespace-nowrap text-sm" style={{ left: `calc(50% + ${MOBILE_LOOP + 10}px)`, top: 230 - MOBILE_LOOP }}>understand it.</span>
-          <span className="absolute -translate-x-1/2 -translate-y-[calc(100%+0.6rem)] whitespace-nowrap text-sm" style={{ left: "50%", top: 230 - 2 * MOBILE_LOOP }}>build it.</span>
-          <span className="absolute -translate-x-[calc(100%+0.6rem)] -translate-y-1/2 whitespace-nowrap text-sm" style={{ left: `calc(50% - ${MOBILE_LOOP}px)`, top: 230 - MOBILE_LOOP }}>hand it over.</span>
+          <span className="absolute -translate-x-1/2 translate-y-3 whitespace-nowrap text-sm" style={{ left: "50%", top: 230 }}>Understand</span>
+          <span className="absolute -translate-y-1/2 whitespace-nowrap text-sm" style={{ left: `calc(50% + ${MOBILE_LOOP + 10}px)`, top: 230 - MOBILE_LOOP }}>Explore</span>
+          <span className="absolute -translate-x-1/2 -translate-y-[calc(100%+0.6rem)] whitespace-nowrap text-sm" style={{ left: "50%", top: 230 - 2 * MOBILE_LOOP }}>Identify</span>
+          <span className="absolute -translate-x-[calc(100%+0.6rem)] -translate-y-1/2 whitespace-nowrap text-sm" style={{ left: `calc(50% - ${MOBILE_LOOP}px)`, top: 230 - MOBILE_LOOP }}>Build</span>
           <span className="absolute -translate-x-1/2 -translate-y-1/2 font-serif text-2xl italic" style={{ left: "50%", top: 230 - MOBILE_LOOP }}>repeat.</span>
         </div>
       </div>
 
-      {/* enough autobiography — the thread ends at the button */}
+      {/* enough about me — the thread ends at the button */}
       <div className="relative px-5 pb-24 pt-14 text-center">
         <span data-say="go on. it's the good part." className="absolute left-0 top-10 h-px w-px" />
         <Anchor x="94%" y={40} />
-        <p className="reveal text-sm text-muted-foreground">enough autobiography.</p>
-        <h2 className="reveal mt-2 font-serif text-[2.3rem] leading-tight">let's look at what<br />came out of it.</h2>
+        <p className="reveal text-sm text-muted-foreground">okay, enough about me.</p>
+        <h2 className="reveal mt-2 font-serif text-[2.3rem] leading-tight">let's see what<br />came out of it.</h2>
         <div className="relative mt-7 inline-block">
           <span data-anchor className="absolute left-[calc(100%+2.75rem)] top-[-0.25rem]" />
           <span data-anchor className="absolute left-full top-1/2" />
@@ -1144,38 +1133,56 @@ function MobileStory({ ready, onWork }: { ready: boolean; onWork: () => void }) 
   );
 }
 
+const skillGroups = [
+  { title: "Development", items: ["Python", "JavaScript", "React", "Django", "Flask", "SQL"] },
+  { title: "AI & Generative AI", items: ["Generative AI", "LLM Integration", "LangChain", "RAG", "Computer Vision"] },
+  { title: "Data & Analytics", items: ["Power BI", "Pandas", "Data Visualization"] },
+  { title: "Tools & Platforms", items: ["Git & GitHub", "Postman", "AWS", "Supabase"] },
+];
+
 function Works({ filter, setFilter }: { filter: string; setFilter: (filter: string) => void }) {
   const filtered = filter === "All" ? projects : projects.filter((project) => project.tags.includes(filter));
   return (
     <section id="work" className="relative min-h-screen border-t border-foreground bg-background px-5 pb-24 pt-28 sm:px-8">
-      <div className="pointer-events-none absolute inset-x-0 top-0 overflow-hidden" aria-hidden="true"><p className="translate-y-[-38%] whitespace-nowrap text-[26vw] font-semibold leading-none text-muted">WORKS</p></div>
-      <div className="relative mx-auto grid max-w-[1500px] gap-16 pt-[18vw] lg:grid-cols-[minmax(280px,0.65fr)_minmax(0,1.35fr)]">
-        <aside className="h-fit lg:sticky lg:top-28">
-          <p className="text-sm text-muted-foreground">selected work / 2022—now</p>
-          <h2 className="mt-4 max-w-md font-serif text-5xl leading-none sm:text-6xl">a few things,<br /><em>chosen on purpose.</em></h2>
-          <p className="mt-8 max-w-sm text-muted-foreground">AI, privacy, and open source, built end to end.</p>
-          <p className="mb-3 mt-10 text-sm">show me</p>
+      <div className="pointer-events-none absolute inset-x-0 top-0 overflow-hidden" aria-hidden="true"><p className="-mt-[0.27em] whitespace-nowrap text-center text-[28vw] font-semibold leading-[1.1] text-muted lg:text-[23vw]">WORKS</p></div>
+      <div className="relative mx-auto grid max-w-[1500px] gap-16 pt-[14vw] sm:pt-[19vw] lg:grid-cols-[minmax(360px,1fr)_minmax(0,1fr)] lg:pt-[15vw]">
+        <aside className="h-fit lg:sticky lg:top-24">
+          <p className="text-sm text-muted-foreground">selected work </p>
+          <h2 className="mt-4 max-w-md font-serif text-3xl leading-tight sm:text-4xl">Some Ideas <br /><em>brought to life</em></h2>
+          <h3 className="mt-8 font-serif text-2xl">Things I've worked with</h3>
+          <div className="mt-3 grid max-w-xl gap-x-6 gap-y-4 sm:grid-cols-2">
+            {skillGroups.map((group) => (
+              <div key={group.title}>
+                <p className="text-xs text-muted-foreground">{group.title}</p>
+                <div className="mt-1.5 flex flex-wrap gap-1.5">
+                  {group.items.map((item) => <span key={item} className="rounded-full border border-border px-2.5 py-0.5 text-xs">{item}</span>)}
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="mb-3 mt-8 text-sm">show me</p>
           <div className="flex flex-wrap gap-2">
-            {["All", "AI", "Privacy", "Open source"].map((item) => <Button key={item} variant="filter" data-active={filter === item} onClick={() => setFilter(item)} data-cursor={`filter: ${item.toLowerCase()}`}>{item}</Button>)}
+            {["All", "Agentic AI", "RAG", "Fullstack"].map((item) => <Button key={item} variant="filter" data-active={filter === item} onClick={() => setFilter(item)} data-cursor={`filter: ${item.toLowerCase()}`}>{item}</Button>)}
           </div>
         </aside>
         <div className="grid gap-20">
           {filtered.map((project) => (
-            <article key={project.title} className="group">
-              <a href={project.live} target="_blank" rel="noreferrer" className="block overflow-hidden border border-border bg-muted" data-cursor="see it live ↗">
-                <img src={project.image} alt={`${project.title} website`} loading="lazy" width={1200} height={912} className="aspect-[4/3] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]" />
+            <article key={project.title} className="group ml-auto w-full max-w-[34rem]">
+              <a href={project.live || project.code} target="_blank" rel="noreferrer" className="block overflow-hidden border border-border bg-muted" data-cursor={project.live ? "see it live ↗" : "see the code ↗"}>
+                <img src={project.image} alt={`${project.title} screenshot`} loading="lazy" width={1200} height={912} className="aspect-[4/3] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]" />
               </a>
               <div className="mt-5 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-5">
-                <div className="min-w-0"><p className="text-xs text-muted-foreground">{project.number} / {project.tags.join(" · ")}</p><h3 className="mt-1 font-serif text-4xl">{project.title}</h3><p className="mt-2 max-w-xl text-muted-foreground">{project.blurb}</p></div>
+                <div className="min-w-0"><p className="text-xs text-muted-foreground">{project.number}</p><h3 className="mt-1 font-serif text-4xl">{project.title}</h3><p className="mt-2 max-w-xl text-muted-foreground">{project.blurb}</p></div>
                 <Button asChild variant="paper" size="icon"><a href={project.code} target="_blank" rel="noreferrer" aria-label={`${project.title} on GitHub`} data-cursor="read the code ↗"><ArrowUpRight className="h-5 w-5" /></a></Button>
               </div>
             </article>
           ))}
-          {filtered.length === 0 && <p className="py-24 text-muted-foreground">That shelf is being rearranged. Try another filter.</p>}
+          {filtered.length === 0 && <p className="py-24 text-muted-foreground">nothing on this shelf yet. give it a week.</p>}
           {/* the way down to everything else */}
           <div className="flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-border pt-10">
             <p className="font-serif text-3xl">interested? <span className="text-muted-foreground">there's more.</span></p>
-            <RabbitHoleButton />
+            {/* testing the thread plane; swap back to <RabbitHoleButton /> (import from @/components/rabbit-hole) to restore the fall */}
+            <ThreadPlaneButton />
           </div>
         </div>
       </div>
@@ -1183,116 +1190,161 @@ function Works({ filter, setFilter }: { filter: string; setFilter: (filter: stri
   );
 }
 
-// Where the closing thread ends — her raised hand — in vw/vh of the section's
-// first screen. The photo is pinned so that hand lands exactly on this point.
-const HAND_X = 78;
-const HAND_Y = 20;
+// Where the ID card's lanyard hangs from, in vw of the section.
+const HAND_X = 71;
+// How big the card (and everything hung round it) is drawn on desktop.
+const CARD_S = 1;
 
-// What I say as people keep playing with the cutout — one line per stretch,
-// getting less patient, until it's time to just talk.
-const meLines = [
-  "oh, hi. you found me.",
-  "hey, careful.",
-  "okay, that tickles.",
-  "you're enjoying this, aren't you?",
-  "i'm a developer, not a rubber band.",
-  `okay, enough. let's connect? ↓ ${EMAIL}`,
-];
-
-// My cutout, pinned by the raised hand. Hover and it pops forward and says
-// hi; grab and drag to stretch it like rubber from that hand, and it springs
-// back on release. Every stretch gets a new (less patient) line.
-function MeCutout({ visible, phone = false, imgRef }: { visible: boolean; phone?: boolean; imgRef?: RefObject<HTMLImageElement | null> }) {
-  const start = useRef<{ x: number; y: number } | null>(null);
-  const [pull, setPull] = useState({ x: 0, y: 0 });
+// My ID card on a lanyard. It hangs from the top of the section like a
+// pendulum: grab it and swing it around, let go and it settles back. The
+// physics runs in a rAF loop writing straight to the DOM, no React renders.
+function LanyardCard({ visible, phone = false }: { visible: boolean; phone?: boolean }) {
+  const anchorRef = useRef<HTMLDivElement>(null);
+  const strapRef = useRef<HTMLDivElement>(null);
+  const tagRef = useRef<HTMLDivElement>(null);
+  const glareRef = useRef<HTMLDivElement>(null);
   const [dragging, setDragging] = useState(false);
-  const [hovered, setHovered] = useState(false);
-  const [stretches, setStretches] = useState(0);
-  const [typed, setTyped] = useState("");
+  const sim = useRef({ x: 0, y: 0, vx: 0, vy: 0, a: 0, w: 0, rx: 0, ry: 0, grabX: 0, grabY: 0, tx: 0, ty: 0, drag: false, kick: false });
 
-  // Stretch along the pull, squeezing the other way so it feels like rubber.
-  const stretch = Math.min(1.8, Math.max(0.6, 1 + pull.y / 400));
-  const squeeze = 1 / Math.sqrt(stretch);
-  const lean = Math.max(-25, Math.min(25, pull.x / 12));
-
-  const pulledHard = dragging && (stretch > 1.5 || stretch < 0.7 || Math.abs(lean) > 20);
-  const line = pulledHard ? "ow. that's not how bodies work." : meLines[Math.min(stretches, meLines.length - 1)]!;
-  const talking = hovered || dragging;
+  // Drop in with a little swing the first time it appears.
   useEffect(() => {
-    if (talking) quietOthers(-2);
-  }, [talking]);
-
-  // Type each new line out, like the other objects' confessions.
-  useEffect(() => {
-    if (!talking) {
-      setTyped("");
-      return;
+    if (visible && !sim.current.kick) {
+      sim.current.kick = true;
+      sim.current.vx = phone ? -260 : -420;
     }
-    let index = 0;
-    const timer = window.setInterval(() => {
-      index += 1;
-      setTyped(line.slice(0, index));
-      if (index >= line.length) window.clearInterval(timer);
-    }, 26);
-    return () => window.clearInterval(timer);
-  }, [talking, line]);
+  }, [visible, phone]);
 
-  const letGo = () => {
-    if (start.current && (Math.abs(pull.x) > 20 || Math.abs(pull.y) > 20)) setStretches((n) => n + 1);
-    start.current = null;
-    setDragging(false);
-    setPull({ x: 0, y: 0 });
+  useEffect(() => {
+    const s = sim.current;
+    const rope = () => (phone ? 96 : Math.min(300, Math.max(150, window.innerHeight * 0.25)));
+    s.y = rope();
+    let last = performance.now();
+    let frame = 0;
+    const tick = (now: number) => {
+      const dt = Math.min(0.033, (now - last) / 1000);
+      last = now;
+      const L = rope();
+      const px = s.vx;
+      if (s.drag) {
+        // Follow the finger, but only as far as the strap will stretch.
+        let nx = s.tx;
+        let ny = s.ty;
+        const d = Math.hypot(nx, ny);
+        const max = L * 1.12;
+        if (d > max) {
+          nx = (nx / d) * max;
+          ny = (ny / d) * max;
+        }
+        s.vx = (nx - s.x) / Math.max(dt, 0.001);
+        s.vy = (ny - s.y) / Math.max(dt, 0.001);
+        s.x = nx;
+        s.y = ny;
+      } else {
+        s.vy += 1900 * dt;
+        const damp = Math.max(0, 1 - 0.55 * dt);
+        s.vx *= damp;
+        s.vy *= damp;
+        s.x += s.vx * dt;
+        s.y += s.vy * dt;
+        const d = Math.hypot(s.x, s.y);
+        if (d > L) {
+          const nx = s.x / d;
+          const ny = s.y / d;
+          s.x = nx * L;
+          s.y = ny * L;
+          const vn = s.vx * nx + s.vy * ny;
+          if (vn > 0) {
+            s.vx -= nx * vn * 1.05;
+            s.vy -= ny * vn * 1.05;
+          }
+        }
+      }
+      // The card itself swings on the clip: gravity straightens it, and it
+      // lags behind whenever the clip is pushed sideways.
+      const ax = dt > 0 ? (s.vx - px) / dt : 0;
+      s.w += (-95 * s.a - 5.5 * s.w + Math.max(-60, Math.min(60, ax * 0.0045))) * dt;
+      s.a = Math.max(-1.1, Math.min(1.1, s.a + s.w * dt));
+      // A touch of 3D: it turns on its strap as it moves.
+      s.ry += (Math.max(-38, Math.min(38, -s.vx * 0.035)) - s.ry) * Math.min(1, dt * 8);
+      s.rx += (Math.max(-22, Math.min(22, s.vy * 0.012)) - s.rx) * Math.min(1, dt * 8);
+
+      // on phones the strap hangs straight from the email button above the card
+      const top = phone ? 0 : -420;
+      const sx = s.x;
+      const sy = s.y - top;
+      if (strapRef.current) {
+        strapRef.current.style.height = `${Math.hypot(sx, sy)}px`;
+        strapRef.current.style.transform = `translate(-50%, ${top}px) rotate(${-Math.atan2(sx, sy)}rad)`;
+      }
+      if (tagRef.current) {
+        tagRef.current.style.transform = `translate(${s.x}px, ${s.y}px) translateX(-50%) perspective(800px) rotate(${s.a}rad) rotateY(${s.ry}deg) rotateX(${s.rx}deg)`;
+      }
+      if (glareRef.current) glareRef.current.style.backgroundPosition = `${50 + s.ry * 2.2}% ${50 - s.rx * 2}%`;
+      frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [phone]);
+
+  const toAnchor = (e: { clientX: number; clientY: number }) => {
+    const r = anchorRef.current!.getBoundingClientRect();
+    return { x: e.clientX - r.left, y: e.clientY - r.top };
   };
 
   return (
-    <>
+    <div ref={anchorRef} className={cn("pointer-events-none absolute transition-opacity duration-500", visible ? "opacity-100" : "opacity-0")} style={phone ? { left: "72%", top: 0 } : { left: `${HAND_X}vw`, top: 0 }}>
+      {phone && <span className="absolute -left-1.5 -top-1.5 h-3 w-3 rounded-full border border-foreground bg-background" />}
+      {/* the strap */}
+      <div ref={strapRef} className="absolute left-0 top-0 w-3.5 origin-top bg-foreground" style={{ backgroundImage: "repeating-linear-gradient(180deg, transparent 0 10px, rgb(255 255 255 / 0.12) 10px 12px)" }} />
+      {/* the clip and the card, swinging together */}
       <div
-        aria-live="polite"
-        style={phone ? { left: "-0.5rem", top: "22%", transitionTimingFunction: "cubic-bezier(.34,1.56,.64,1)" } : { left: `${HAND_X - 4}vw`, top: `${HAND_Y + 16}vh`, transitionTimingFunction: "cubic-bezier(.34,1.56,.64,1)" }}
-        className={cn(
-          "absolute z-10 w-max max-w-[16rem] -translate-x-full whitespace-pre-line rounded-[18px_18px_5px_18px] border border-cursor-border bg-cursor px-4 py-2 text-sm text-cursor-foreground shadow-lg transition-[opacity,scale] duration-300",
-          phone && "max-w-[calc(42vw-1.5rem)]",
-          talking ? "scale-100 opacity-100" : "scale-90 opacity-0",
-        )}
-      >
-        {typed}
-        <span className="animate-pulse">|</span>
-      </div>
-      <img
-        ref={imgRef}
-        src={me}
-        alt="nidhi, one hand up in a peace sign, holding the end of the thread"
-        draggable={false}
-        onContextMenu={(e) => e.preventDefault()}
+        ref={tagRef}
         data-cursor=""
-        onPointerEnter={() => setHovered(true)}
-        onPointerLeave={() => setHovered(false)}
         onPointerDown={(e) => {
           e.currentTarget.setPointerCapture(e.pointerId);
-          start.current = { x: e.clientX, y: e.clientY };
+          const p = toAnchor(e);
+          const s = sim.current;
+          s.grabX = p.x - s.x;
+          s.grabY = p.y - s.y;
+          s.tx = s.x;
+          s.ty = s.y;
+          s.drag = true;
           setDragging(true);
         }}
         onPointerMove={(e) => {
-          if (!start.current) return;
-          setPull({ x: e.clientX - start.current.x, y: e.clientY - start.current.y });
+          const s = sim.current;
+          if (!s.drag) return;
+          const p = toAnchor(e);
+          s.tx = p.x - s.grabX;
+          s.ty = p.y - s.grabY;
         }}
-        onPointerUp={letGo}
-        onPointerCancel={letGo}
-        className={cn(
-          phone ? "relative block h-auto w-full touch-none select-none" : "pointer-events-auto absolute h-[76vh] w-auto max-w-none touch-none select-none",
-          dragging ? "cursor-grabbing" : "cursor-grab",
-          visible ? "opacity-100" : "opacity-0",
-        )}
-        style={{
-          ...(phone ? {} : { left: `${HAND_X}vw`, top: `${HAND_Y}vh`, translate: "-41% -2%" }),
-          transformOrigin: "41% 2%",
-          transform: `skewX(${-lean}deg) scale(${(hovered && !dragging ? 1.04 : 1) * squeeze}, ${(hovered && !dragging ? 1.04 : 1) * stretch})`,
-          filter: talking ? "drop-shadow(0 24px 30px rgb(0 0 0 / 0.22))" : "drop-shadow(0 6px 10px rgb(0 0 0 / 0.08))",
-          // Follow the finger instantly while dragging; wobble back when let go.
-          transition: dragging ? "filter .3s" : "transform .9s cubic-bezier(.2,2.2,.4,.8), filter .3s, opacity .4s",
+        onPointerUp={() => {
+          sim.current.drag = false;
+          setDragging(false);
         }}
-      />
-    </>
+        onPointerCancel={() => {
+          sim.current.drag = false;
+          setDragging(false);
+        }}
+        className={cn("pointer-events-auto absolute left-0 top-0 touch-none select-none will-change-transform", dragging ? "cursor-grabbing" : "cursor-grab")}
+        style={{ transformOrigin: "50% 0" }}
+      >
+        <div style={phone ? undefined : { zoom: CARD_S }}>
+        <div className="relative mx-auto h-7 w-7 -mb-3.5 rounded-[5px] border border-foreground/40 bg-gradient-to-b from-neutral-100 via-neutral-300 to-neutral-400 shadow-sm" />
+        <div className="relative mt-2 w-[15rem] overflow-hidden rounded-[1.1rem] border border-foreground/15 bg-white px-5 pb-4 pt-6 shadow-[0_18px_40px_-12px_rgb(0_0_0/0.35)]">
+          <div className="absolute left-1/2 top-2.5 h-2 w-12 -translate-x-1/2 rounded-full border border-foreground/20 bg-background" />
+          <div className="aspect-[5/4] overflow-hidden rounded-xl bg-[#f4efe4]">
+            <img src={profile} alt="sahithi, drawn as a doodle" draggable={false} className="h-full w-full object-cover mix-blend-multiply" />
+          </div>
+          <p className="mt-3 font-serif text-xl leading-none">Sahithi</p>
+          <p className="mt-1 text-xs text-muted-foreground">software engineer · class of '26</p>
+          <p className="mt-2 flex items-center gap-1.5 font-hand text-sm tracking-wide"><span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />open to work</p>
+          <div className="mt-3 h-6 opacity-80" style={{ backgroundImage: "repeating-linear-gradient(90deg, #111 0 2px, transparent 2px 4px, #111 4px 5px, transparent 5px 8px, #111 8px 11px, transparent 11px 13px)" }} />
+          <div ref={glareRef} className="pointer-events-none absolute inset-0 mix-blend-soft-light" style={{ backgroundImage: "linear-gradient(115deg, transparent 35%, rgb(255 255 255 / 0.85) 50%, transparent 65%)", backgroundSize: "250% 250%" }} />
+        </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -1317,106 +1369,128 @@ function ScribbleArrow({ d, head, className, style }: { d: string; head: string;
 
 const pill = "inline-flex items-center justify-between gap-10 rounded-xl px-5 text-[1.05rem] transition-colors";
 
-// 10 — the end. "oh, hi. i'm nidhi." — and the thread leaves the "hi." and
+// The end. "oh, hi. i'm sahithi." — and the thread leaves the "hi." and
 // waves its way across into my raised hand. Margin notes scribbled around it.
 function OhHi() {
   const ref = useRef<HTMLElement>(null);
-  const pathRef = useRef<SVGPathElement>(null);
-  const hiRef = useRef<HTMLSpanElement>(null);
-  // Only the two moments that change the layout go through React: the words
-  // arriving, and the thread reaching my hand.
+  const deskSocketRef = useRef<HTMLDivElement>(null);
+  const phoneSocketRef = useRef<HTMLDivElement>(null);
+  const phoneCardRef = useRef<HTMLDivElement>(null);
+  // Only the moments that change the layout go through React: the words
+  // arriving, the cable reaching the plug (so the socket draws itself), and
+  // the plug going home.
   const [stage, setStage] = useState({ seen: false, reached: false });
-  const [thread, setThread] = useState("");
+  const [plugged, setPlugged] = useState(false);
+  const [funOpen, setFunOpen] = useState(false);
+  const [cable, setCable] = useState<{ a: string; w: number; h: number; card: { x: number; y: number; w: number; h: number } | null } | null>(null);
   const seen = stage.seen;
-  // Phones: the thread runs down the page from "oh, hi." into my raised hand.
-  const phoneImgRef = useRef<HTMLImageElement>(null);
-  const phonePathRef = useRef<SVGPathElement>(null);
-  const [phoneThread, setPhoneThread] = useState<{ d: string; y0: number; y1: number; w: number; h: number } | null>(null);
-  const [phoneReached, setPhoneReached] = useState(false);
 
-  // The thread starts right after "oh, hi." — wherever the type lands on this
-  // screen — so measure it, then wave through to the hand.
+  // The cable runs from the end of "oh, hi." over the socket and down round the
+  // far side to the plug's cord. Everything is measured in pixels from the
+  // laid-out page, so it follows whatever the screen does.
   useEffect(() => {
     const measure = () => {
-      const hi = hiRef.current;
       const section = ref.current;
-      if (!hi || !section) return;
-      const r = hi.getBoundingClientRect();
-      const q = section.getBoundingClientRect();
-      const sx = ((r.right - q.left) / window.innerWidth) * 100 + 0.8;
-      const sy = ((r.top - q.top + r.height * 0.55) / window.innerHeight) * 100;
-      // On phones, trace it in pixels: out of the "hi.", down the right edge,
-      // and hook into the hand (41% across, 2% down the cutout).
-      const img = phoneImgRef.current;
-      if (window.innerWidth < 768 && img) {
-        const m = img.getBoundingClientRect();
-        const w = q.width;
-        const start: Waypoint = [r.right - q.left + 6, r.top - q.top + r.height * 0.55];
-        const hand: Waypoint = [m.left - q.left + m.width * 0.41, m.top - q.top + m.height * 0.02];
-        const d = segmentsPath(threadSegments([start, [w * 0.9, start[1] + 36], [w * 0.95, (start[1] + hand[1]) / 2], [hand[0] + 44, hand[1] - 80], hand], 1, 1));
-        setPhoneThread({ d, y0: start[1], y1: hand[1], w, h: q.height });
+      const phone = window.innerWidth < 768;
+      const socket = (phone ? phoneSocketRef : deskSocketRef).current;
+      if (!section || !socket) return;
+      // Layout offsets rather than bounding rects, so the words still fading
+      // in (and shifted a few px) don't throw the cable off.
+      const box = (el: HTMLElement) => {
+        let x = 0;
+        let y = 0;
+        for (let n: HTMLElement | null = el; n && n !== section; n = n.offsetParent as HTMLElement | null) {
+          x += n.offsetLeft;
+          y += n.offsetTop;
+        }
+        return { left: x, top: y, width: el.offsetWidth, height: el.offsetHeight, right: x + el.offsetWidth };
+      };
+      const q = { left: 0, top: 0, width: section.offsetWidth, height: section.offsetHeight };
+      const k = box(socket);
+      if (k.width === 0) return;
+      const plug: [number, number] = [k.left - q.left + k.width * PLUG_CORD.x, k.top - q.top + k.height * PLUG_CORD.y];
+      const w = q.width;
+      // The thread starts at the corner of the ID card and droops across to the
+      // plug, arriving from the right.
+      let start: [number, number];
+      let toPlug: Waypoint[];
+      let card: { x: number; y: number; w: number; h: number } | null = null;
+      if (phone) {
+        // starts hidden behind the card and slips out of its left edge, so the
+        // card's text stays clear
+        const c = box(phoneCardRef.current ?? socket);
+        const px = c.left + c.width * 0.72;
+        const top = c.top + 96 + 22;
+        start = [px - 20, top + 140];
+        toPlug = [start, [px - 100, top + 190], [px - 128, top + 240], [px - 132, top + 290], [plug[0] + 70, plug[1] - 90], [plug[0] + 46, plug[1] - 22], [plug[0] + 14, plug[1] - 2], plug, [plug[0] - 9, plug[1] + 0.5]];
+      } else {
+        const rope = Math.min(300, Math.max(150, window.innerHeight * 0.25));
+        // The path is sketched on a reference screenshot (strap centre x=222, card
+        // top y=205, 1.8 css px per sketch px). From the top line of the section it
+        // swings across the strap, round the far side, behind the card, out of its
+        // right edge and back under it into the plug.
+        const ax = (w * HAND_X) / 100;
+        const cardTop = rope + 22 * CARD_S;
+        const P = (x: number, y: number): [number, number] => [ax + (x - 222) * 1.8 * CARD_S, cardTop + (y - 205) * 1.8 * CARD_S];
+        card = { x: ax - 120 * CARD_S, y: cardTop, w: 240 * CARD_S, h: 312 * CARD_S };
+        start = [P(257, 0)[0], 0];
+        toPlug = [
+          start, P(262, 75), P(255, 98), P(225, 117), P(190, 130), P(166, 150), P(165, 178), P(185, 202), P(230, 235), P(275, 275), P(300, 312), P(308, 345), P(300, 385), P(275, 405),
+          [plug[0] + 60, plug[1] - 6], [plug[0] + 26, plug[1] - 8], [plug[0] + 8, plug[1] - 5], plug,
+        ];
       }
-      const crest = Math.max(sx + 6, 31);
-      setThread(threadPath([[sx, sy], [crest, sy - 4], [crest + 14, 36], [59, 51.5], [68, 38], [72.5, HAND_Y + 3], [HAND_X - 2.5, HAND_Y + 0.2], [HAND_X, HAND_Y]]));
+      setCable({ a: segmentsPath(threadSegments(toPlug, 1, 1)), w, h: q.height, card });
     };
     measure();
     void document.fonts?.ready.then(measure);
-    // The cutout has no height until it loads, so trace again once it has.
-    const photo = phoneImgRef.current;
-    photo?.addEventListener("load", measure);
+    // The words settle once they have faded in; measure again then.
+    const settle = [window.setTimeout(measure, 900), window.setTimeout(measure, 2500)];
+    // …and whenever anything above shifts the plug or the socket.
+    const watch = new ResizeObserver(measure);
+    [ref.current, deskSocketRef.current, phoneSocketRef.current].forEach((el) => el && watch.observe(el));
     window.addEventListener("resize", measure);
     return () => {
-      photo?.removeEventListener("load", measure);
+      settle.forEach((t) => window.clearTimeout(t));
+      watch.disconnect();
       window.removeEventListener("resize", measure);
     };
   }, []);
 
   useEffect(() => {
-    if (!phoneThread) return;
-    let frame = 0;
-    const draw = () => {
-      frame = 0;
-      const node = ref.current;
-      const path = phonePathRef.current;
-      if (!node || !path) return;
-      const top = node.getBoundingClientRect().top;
-      const p = Math.min(1, Math.max(0, (window.innerHeight * 0.72 - (top + phoneThread.y0)) / Math.max(1, phoneThread.y1 - phoneThread.y0)));
-      path.style.strokeDashoffset = `${1 - p}`;
-      setPhoneReached(p >= 0.98);
-    };
-    const onScroll = () => {
-      if (!frame) frame = requestAnimationFrame(draw);
-    };
-    draw();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", onScroll);
-    };
-  }, [phoneThread]);
-
-  useEffect(() => {
     const node = ref.current;
     if (!node) return;
-    // Arrive and the thread travels toward my hand; scroll back up and it
+    // Arrive and the cable travels toward the plug; scroll back up and it
     // retraces its way out. It animates on its own rather than sticking to
     // the scrollbar, easing toward wherever it should be.
     let frame = 0;
     let current = 0;
-    let greeted = false;
+    let connected = false;
     const tick = () => {
       const { top } = node.getBoundingClientRect();
       const target = top < window.innerHeight * 0.45 ? 1 : 0;
       const gap = target - current;
       current = Math.abs(gap) < 0.002 ? target : current + gap * 0.045 + Math.sign(gap) * 0.004;
       current = Math.min(1, Math.max(0, current));
-      if (pathRef.current) pathRef.current.style.strokeDashoffset = `${1 - current}`;
-      const next = { seen: current > 0.3, reached: current >= 0.98 };
-      if (next.reached && !greeted) {
-        greeted = true;
-        say("hi", "you made it all the way here? hi.");
+      node.querySelectorAll<SVGPathElement>("[data-cable]").forEach((el) => (el.style.strokeDashoffset = `${1 - current}`));
+      // The same thread goes on to draw the plug and then the socket, one
+      // continuous line, in the last stretch of its journey.
+      const part = (from: number, to: number) => `${1 - Math.min(1, Math.max(0, (current - from) / (to - from)))}`;
+      node.querySelectorAll<SVGPathElement>("[data-draw]").forEach((el) => {
+        el.style.strokeDashoffset = el.dataset["draw"] === "plug" ? part(0.7, 0.84) : part(0.84, 1);
+      });
+      // Latched: it plugs in once the thread has finished and only unplugs
+      // after the thread has clearly retreated, so small scrolls never replay it.
+      if (!connected && current >= 0.995) {
+        connected = true;
+        setPlugged(true);
+      } else if (connected && current < 0.5) {
+        connected = false;
+        setPlugged(false);
       }
-      setStage((s) => (s.seen === next.seen && s.reached === next.reached ? s : next));
+      setStage((s) => {
+        const next = { seen: current > 0.3, reached: current >= 0.98 };
+        return s.seen === next.seen && s.reached === next.reached ? s : next;
+      });
       frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);
@@ -1430,26 +1504,38 @@ function OhHi() {
   });
 
   return (
-    <section id="hi" ref={ref} className="relative min-h-screen overflow-hidden border-t border-border px-5 pb-10 pt-28 sm:px-8 md:h-screen md:min-h-[720px] md:px-[4.5vw] md:pb-0 md:pt-[23vh]">
-      {phoneThread && (
-        <svg aria-hidden="true" className="pointer-events-none absolute left-0 top-0 md:hidden" width={phoneThread.w} height={phoneThread.h} viewBox={`0 0 ${phoneThread.w} ${phoneThread.h}`}>
-          <path ref={phonePathRef} d={phoneThread.d} pathLength="1" strokeDasharray="1" style={{ strokeDashoffset: 1 }} fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-        </svg>
+    <section id="hi" ref={ref} className="relative min-h-screen overflow-hidden border-t border-border px-5 pb-32 pt-28 sm:px-8 md:h-screen md:min-h-[720px] md:px-[4.5vw] md:pb-0 md:pt-[23vh]">
+      {/* the cable: laptop → (the whole story) → "hi." → over the socket → plug */}
+      {cable && (
+        <>
+          {/* behind the card: the whole thread, so the card hides it where they overlap */}
+          <svg aria-hidden="true" className="pointer-events-none absolute left-0 top-0 z-0" width={cable.w} height={cable.h} viewBox={`0 0 ${cable.w} ${cable.h}`}>
+            <path data-cable d={cable.a} pathLength="1" strokeDasharray="1" style={{ strokeDashoffset: 1 }} fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          {/* in front of the strap and everything else, but cut out where the card rests */}
+          <svg aria-hidden="true" className="pointer-events-none absolute left-0 top-0 z-20 hidden md:block" width={cable.w} height={cable.h} viewBox={`0 0 ${cable.w} ${cable.h}`}>
+            {cable.card && (
+              <clipPath id="cable-front">
+                <path clipRule="evenodd" d={`M0 0H${cable.w}V${cable.h}H0Z M${cable.card.x + 18} ${cable.card.y}H${cable.card.x + cable.card.w - 18}A18 18 0 0 1 ${cable.card.x + cable.card.w} ${cable.card.y + 18}V${cable.card.y + cable.card.h - 18}A18 18 0 0 1 ${cable.card.x + cable.card.w - 18} ${cable.card.y + cable.card.h}H${cable.card.x + 18}A18 18 0 0 1 ${cable.card.x} ${cable.card.y + cable.card.h - 18}V${cable.card.y + 18}A18 18 0 0 1 ${cable.card.x + 18} ${cable.card.y}Z`} />
+              </clipPath>
+            )}
+            <g clipPath={cable.card ? "url(#cable-front)" : undefined}>
+              <path data-cable d={cable.a} pathLength="1" strokeDasharray="1" style={{ strokeDashoffset: 1 }} fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+            </g>
+          </svg>
+        </>
       )}
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 z-10 hidden h-screen md:block">
-        <svg viewBox="0 0 1000 1000" preserveAspectRatio="none" className="absolute inset-0 h-full w-full">
-          <path ref={pathRef} pathLength="1" strokeDasharray="1" style={{ strokeDashoffset: 1 }} d={thread} fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-        </svg>
-        {/* little sparks where the thread meets the peace sign */}
-        <svg viewBox="0 0 40 40" className={cn("absolute h-14 w-14 transition-all duration-500", stage.reached ? "scale-100 opacity-100" : "scale-50 opacity-0")} style={{ left: `calc(${HAND_X}vw + 0.4rem)`, top: `calc(${HAND_Y}vh - 3.4rem)` }}>
-          <path d="M9 4 L11 15 M23 7 L18 17 M33 17 L23 21" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-        </svg>
-        <MeCutout visible={stage.reached} />
-        <div {...arrive(stage.reached, ".3s", "absolute", { left: `${HAND_X + 9.5}vw`, top: "32vh" })}>
-          <Scribble className="w-36" rotate={-14}>same girl...<br />just more<br />ideas now.</Scribble>
+        <LanyardCard visible={stage.seen} />
+        {/* the socket sits on the plain space below the card, the battery under it */}
+        <div ref={deskSocketRef} className="absolute z-10 w-[clamp(8.1rem,13.5vw,12.6rem)]" style={{ left: `calc(${HAND_X}vw - 8.5rem)`, top: "calc(clamp(150px, 25vh, 300px) + 358px)" }}>
+          <SocketPlug plugged={plugged} className="block h-auto w-full" />
+        </div>
+        <div {...arrive(stage.reached, ".3s", "absolute", { left: `${HAND_X + 11.5}vw`, top: "32vh" })}>
+          <Scribble className="w-36" rotate={-14}>yes, that's me.<br />go on,<br />give it a tug.</Scribble>
           <ScribbleArrow className="-left-2 top-24" d="M30 4 C32 20 22 32 6 36" head="M6 36 L16 29 M6 36 L15 42" />
         </div>
-        <div {...arrive(stage.reached, ".6s", "absolute", { left: `${HAND_X + 9.5}vw`, top: "65vh" })}>
+        <div {...arrive(stage.reached, ".6s", "absolute", { left: `${HAND_X + 11.5}vw`, top: "65vh" })}>
           <Scribble className="w-36" rotate={-14}>still figuring<br />this out...<br />and probably<br />always will.</Scribble>
           <ScribbleArrow className="-left-12 top-10" d="M40 18 C30 30 18 32 6 30" head="M6 30 L15 24 M6 30 L14 37" />
         </div>
@@ -1460,40 +1546,40 @@ function OhHi() {
           <Scribble className="absolute -left-1 -top-14 hidden md:block" rotate={-12}>who made this?</Scribble>
           <ScribbleArrow className="-left-8 -top-7 hidden md:block" d="M26 4 C12 10 6 22 10 36" head="M10 36 L4 27 M10 36 L16 29" />
           <h2 className="font-serif text-[clamp(3.5rem,6.6vw,7.5rem)] leading-[0.9] tracking-[-0.01em]">
-            <span ref={hiRef}>oh, hi.</span>
+            <span>oh, hi.</span>
             <br />
-            i'm <em>nidhi</em>.
+            i'm <em>sahithi</em>.
           </h2>
         </div>
-        <p className="mt-4 text-[clamp(1.05rem,1.25vw,1.35rem)] leading-[1.2] text-muted-foreground">still curious.<br />still building.<br />still opening tabs.</p>
-        <p className="mt-7 font-serif text-[clamp(1.75rem,2.75vw,3rem)] leading-[1.08]">let's build something<br />the internet <em>hasn't seen yet</em>.</p>
-        <div className="relative mt-7 flex w-fit flex-col items-start gap-3">
-          <a href={`mailto:${EMAIL}`} className={cn(pill, "min-w-64 bg-foreground py-3 text-background hover:bg-foreground/85")} data-cursor="send the interesting idea.">{EMAIL} <ArrowUpRight className="h-4 w-4" /></a>
+        <p className="mt-4 text-[clamp(1.05rem,1.25vw,1.35rem)] leading-[1.2] text-muted-foreground">still curious.<br />still shipping.<br />still opening tabs.</p>
+        <p className="mt-7 font-serif text-[clamp(1.75rem,2.75vw,3rem)] leading-[1.08]">looking for my first<br />full-time team. <em>is it yours?</em></p>
+        <p className="mt-3 text-sm text-muted-foreground">ai or full-stack · hyderabad, bangalore, pune, chennai or remote</p>
+        <div className="relative mt-7 flex w-fit flex-col items-start gap-3 max-md:flex-col-reverse">
+          <a href={`mailto:${EMAIL}`} className={cn(pill, "min-w-64 bg-foreground py-3 text-background hover:bg-foreground/85")} data-cursor="hiring? i reply fast.">{EMAIL} <ArrowUpRight className="h-4 w-4" /></a>
           <div className="flex flex-wrap gap-3">
+            <a href={LINKS.resume || "#"} target={LINKS.resume ? "_blank" : undefined} rel="noreferrer" className={cn(pill, "border border-foreground/50 py-2.5 hover:bg-foreground/5 max-md:bg-background")} data-cursor="the short version.">resume <ArrowUpRight className="h-4 w-4" /></a>
             <a href={LINKS.linkedin} target="_blank" rel="noreferrer" className={cn(pill, "border border-foreground/50 py-2.5 hover:bg-foreground/5 max-md:bg-background")} data-cursor="the professional version.">linkedin <ArrowUpRight className="h-4 w-4" /></a>
-            <a href={LINKS.github} target="_blank" rel="noreferrer" className={cn(pill, "border border-foreground/50 py-2.5 hover:bg-foreground/5 max-md:bg-background")} data-cursor="where the rabbit holes live.">github <ArrowUpRight className="h-4 w-4" /></a>
-            <a href={LINKS.x} target="_blank" rel="noreferrer" className={cn(pill, "border border-foreground/50 py-2.5 hover:bg-foreground/5 max-md:bg-background")} data-cursor="unfiltered thoughts.">x <ArrowUpRight className="h-4 w-4" /></a>
-          </div>
-          {/* the astronaut sits just past the buttons, its fun fact scribbled beside it */}
-          <div className="absolute bottom-[-1.75rem] left-[calc(100%+5vw)] hidden items-end gap-1 md:flex">
-            <div className="relative mb-24">
-              <Scribble className="w-36" rotate={-10}>fun fact:<br />i wanted to be<br />an astronaut.</Scribble>
-              <ScribbleArrow className="-right-8 top-[4.5rem]" d="M4 8 C8 22 18 30 34 30" head="M34 30 L25 24 M34 30 L26 37" />
-            </div>
-            <Figure src={astronaut} alt="a small astronaut holding a star" label="still aiming for the stars. just with code." size="sm" />
+            <a href={LINKS.github} target="_blank" rel="noreferrer" className={cn(pill, "border border-foreground/50 py-2.5 hover:bg-foreground/5 max-md:bg-background")} data-cursor="where all the proof is stored.">github <ArrowUpRight className="h-4 w-4" /></a>
+            {LINKS.x && <a href={LINKS.x} target="_blank" rel="noreferrer" className={cn(pill, "border border-foreground/50 py-2.5 hover:bg-foreground/5 max-md:bg-background")} data-cursor="unfiltered thoughts.">x <ArrowUpRight className="h-4 w-4" /></a>}
           </div>
         </div>
-        <div className="relative ml-auto mt-16 w-[58%] md:hidden">
-          <MeCutout phone visible={phoneReached} imgRef={phoneImgRef} />
-          {/* the astronaut, standing by my legs, with its fun fact above it */}
-          <div className="absolute bottom-[1%] right-[66%] flex w-40 flex-col items-center">
-            <Scribble className="mb-1 w-36 text-center" rotate={-8}>fun fact:<br />i wanted to be<br />an astronaut.</Scribble>
-            <Figure src={astronaut} alt="a small astronaut holding a star" label="still aiming for the stars. just with code." size="sm" />
+        <div ref={phoneCardRef} className="relative z-10 mt-1 h-[28rem] w-full md:hidden">
+          <LanyardCard phone visible={stage.seen} />
+        </div>
+        {/* on phones the socket gets its own row under me, the cable looping in from the left */}
+        <div className="relative z-10 mt-8 flex flex-col items-center md:hidden">
+          <Scribble className="mb-1 text-center" rotate={-6}>aiming high.<br />one commit at a time.</Scribble>
+          <div ref={phoneSocketRef} className="w-72">
+            <SocketPlug plugged={plugged} className="block h-auto w-full" />
           </div>
         </div>
       </div>
 
-      <button onClick={() => document.getElementById("brain")?.scrollIntoView({ behavior: "smooth" })} className="story-link mt-10 block bg-transparent text-xs text-muted-foreground/70 md:absolute md:bottom-5 md:right-8 md:mt-0" data-cursor="rewind ↑">© 2026 nidhi · back to top ↑</button>
+      {/* the joystick takes over from the old "back to top" link */}
+      <div className="absolute bottom-3 right-4 z-30 md:bottom-4 md:right-8">
+        <Joystick onRewind={() => document.getElementById("brain")?.scrollIntoView({ behavior: "smooth" })} onFun={() => setFunOpen(true)} />
+        {funOpen && <FunMode onExit={() => setFunOpen(false)} />}
+      </div>
     </section>
   );
 }
@@ -1514,8 +1600,11 @@ function PhoneComment() {
     };
     window.addEventListener("figure-open", hush);
     window.addEventListener("cursor-comment", onComment);
-    return () => window.removeEventListener("figure-open", hush);
+    // (fixed: the original only removed one of these two listeners)
+    return () => {
+      window.removeEventListener("figure-open", hush);
       window.removeEventListener("cursor-comment", onComment);
+    };
   }, []);
 
   useEffect(() => {
@@ -1663,7 +1752,7 @@ function CuriousCursor({ visible }: { visible: boolean }) {
     <div
       ref={ref}
       aria-hidden="true"
-      className="pointer-events-none fixed left-0 top-0 z-[100] hidden will-change-transform motion-reduce:hidden lg:block"
+      className="pointer-events-none fixed left-0 top-0 z-[600] hidden will-change-transform motion-reduce:hidden lg:block"
       style={{ transform: "translate3d(-200px, -200px, 0)" }}
     >
       <div

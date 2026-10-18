@@ -22,6 +22,8 @@
   --font-sans: "DM Sans", sans-serif;
   --font-serif: "Newsreader", serif;
   --font-hand: "Patrick Hand", cursive;
+  --font-pixel: "VT323", monospace;
+  --font-silk: "Silkscreen", "VT323", monospace;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -233,3 +235,73 @@
   cursor: url("/cursor-arrow.png") 3 2, auto;
   cursor: image-set(url("/cursor-arrow.png") 1x, url("/cursor-arrow@2x.png") 2x) 3 2, auto;
 }
+
+/* The charging cable's end: a plug that slides into its socket, and the
+   battery that starts charging once it has. */
+@keyframes plug-in { from { transform: translateX(-34px); } to { transform: translateX(0); } }
+@keyframes bolt-pop { 0% { opacity: 0; transform: scale(.4) rotate(-14deg); } 60% { opacity: 1; transform: scale(1.18) rotate(4deg); } 100% { opacity: 1; transform: scale(1) rotate(0); } }
+@keyframes bolt-glow { 0%, 100% { filter: drop-shadow(0 0 2px rgb(255 190 30 / .45)); } 50% { filter: drop-shadow(0 0 9px rgb(255 190 30 / .95)); } }
+@utility animate-bolt-pop { animation: bolt-pop .5s cubic-bezier(.34,1.56,.64,1) both; }
+@utility animate-bolt-glow { animation: bolt-glow 2.2s ease-in-out infinite; }
+@keyframes bar-charge { 0% { opacity: .12; } 20%, 80% { opacity: 1; } 100% { opacity: .12; } }
+@utility animate-plug-in { animation: plug-in .6s cubic-bezier(.5,0,.2,1) both; }
+@utility animate-bar-charge { animation: bar-charge 2.4s ease-in-out infinite; }
+
+/* The joystick: the knob leans toward the pointer and springs back on release. */
+@keyframes stick-wobble { 0% { transform: rotate(0); } 30% { transform: rotate(-16deg); } 60% { transform: rotate(9deg); } 100% { transform: rotate(0); } }
+@utility animate-stick-wobble { animation: stick-wobble .7s cubic-bezier(.3,1.6,.5,1) both; }
+
+/* Fun Mode: the garden, and the very small dog. */
+@keyframes fm-twinkle { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
+@keyframes fm-firefly {
+  0%, 100% { transform: translate(0, 0); opacity: .15; }
+  25% { opacity: 1; }
+  50% { transform: translate(var(--dx), var(--dy)); opacity: .35; }
+  75% { opacity: .95; }
+}
+@keyframes fm-petal {
+  0% { transform: translate3d(0, -6vh, 0) rotate(0); opacity: 0; }
+  10% { opacity: .85; }
+  90% { opacity: .85; }
+  100% { transform: translate3d(var(--dx), 108vh, 0) rotate(540deg); opacity: 0; }
+}
+@keyframes fm-sway { 0%, 100% { transform: rotate(-.7deg); } 50% { transform: rotate(.7deg); } }
+@keyframes fm-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fm-garden-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fm-leg-a { 0%, 100% { transform: rotate(26deg); } 50% { transform: rotate(-26deg); } }
+@keyframes fm-leg-b { 0%, 100% { transform: rotate(-26deg); } 50% { transform: rotate(26deg); } }
+@keyframes fm-wag { 0%, 100% { transform: rotate(-14deg); } 50% { transform: rotate(30deg); } }
+@keyframes fm-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-1.2px); } }
+@keyframes fm-breathe { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(.6px); } }
+
+.fm-twinkle { animation: fm-twinkle 4.5s ease-in-out infinite; }
+.fm-firefly { animation: fm-firefly 8s ease-in-out infinite; }
+.fm-petal { animation: fm-petal 20s linear infinite; }
+.fm-sway { animation: fm-sway 7s ease-in-out infinite; }
+.fm-rise { animation: fm-rise .9s cubic-bezier(.22,.7,.2,1) both; }
+.fm-garden-in { animation: fm-garden-in 1.1s ease-out both; }
+@keyframes fm-tug { 0%, 100% { transform: translate(0, 0) rotate(0); } 30% { transform: translate(-1.2px, -.6px) rotate(-1.4deg); } 65% { transform: translate(.8px, .4px) rotate(.9deg); } }
+.fm-tug { animation: fm-tug .9s ease-in-out infinite; transition: opacity .2s; }
+
+.fm-dog-leg { transform-box: fill-box; transform-origin: 50% 0; }
+.fm-dog-tail { transform-origin: 7.5px 13px; }
+.fm-dog-head { transform-origin: 28px 12px; transition: transform .35s ease; }
+.fm-dog-ear { transform-origin: 26px 5px; }
+.fm-dog[data-dog="run"] .fm-dog-leg-a { animation: fm-leg-a .3s linear infinite; }
+.fm-dog[data-dog="run"] .fm-dog-leg-b { animation: fm-leg-b .3s linear infinite; }
+.fm-dog[data-dog="run"] .fm-dog-bob { animation: fm-bob .3s ease-in-out infinite; }
+.fm-dog[data-dog="run"] .fm-dog-tail { animation: fm-wag .45s ease-in-out infinite; }
+.fm-dog[data-dog="idle"] .fm-dog-bob { animation: fm-breathe 2.4s ease-in-out infinite; }
+.fm-dog[data-dog="wag"] .fm-dog-tail { animation: fm-wag .26s ease-in-out infinite; }
+.fm-dog[data-dog="tilt"] .fm-dog-head { transform: rotate(16deg); }
+.fm-dog[data-dog="sit"] .fm-dog-bob { transform: translateY(2px); }
+.fm-dog[data-dog="sit"] .fm-dog-tail { animation: fm-wag .9s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .fm-firefly, .fm-petal, .fm-sway, .fm-twinkle, .fm-tug, .fm-dog * { animation: none !important; }
+  .fm-petal { display: none; }
+}
+
+@keyframes fm-pop { from { opacity: 0; transform: translateY(10px) scale(.98); } to { opacity: 1; transform: none; } }
+.fm-pop { animation: fm-pop .28s cubic-bezier(.22,.7,.2,1) both; }
+@media (prefers-reduced-motion: reduce) { .fm-pop { animation: none; } }
