@@ -1,67 +1,81 @@
-# nidhi — the anatomy of a curious developer
+# Sahithi — professionally curious, personally chaotic ✦
 
-**Live:** [somehowliving.tech](https://www.somehowliving.tech)
+A little corner of the internet where code meets creativity.
 
-My personal portfolio: a story told along a single hand-drawn thread.
+This is my personal portfolio, built around a simple idea: there's more to a person than what's on their résumé. It's a space for the things I build, the ideas I explore, and the things I love doing away from a screen.
 
-It starts as a tangled scribble ("an almost accurate map of everything on my mind"). As you scroll, the thread wanders through the things I tinker with, the few that have my heart, the years so far, and the loop I keep repeating, then hands you over to the work. "More rabbit holes" drops you through a black hole into everything else I've built, and at the very end the thread lands in my raised hand.
+**Live:** [Add your portfolio URL]
 
-- **Laptop:** the story scrolls sideways. The thread draws itself as you go, objects talk when you hover them, the climber follows your cursor along the thread, and the cutout at the end stretches when you drag it.
-- **Mobile:** the same story told vertically, with the thread weaving down the page, objects that talk when tapped, and a climber you can drag along the thread.
+## ✦ The idea behind it
 
-Designed and built from scratch. Inspired by [coolestdesigner.com](https://coolestdesigner.com/).
+My journey with technology began with my first laptop. It was my starting point for exploring code, experimenting with ideas, and discovering what I could create. So, instead of opening with a conventional portfolio landing page, I wanted to build the experience around that little starting point.
+
+The laptop sits at the centre of the story, connected to the rest of the experience by a hand-drawn thread. Inspired by the original thread-based storytelling concept, I reimagined that thread as a charging cable — a small detail that connects the visual idea to my own story.
+
+But there's more to me than technology.
+
+I wanted to bring together two sides of myself: the person who builds projects and explores new technologies, and the person who paints, draws, makes things, and has interests beyond a screen. That's where **Work Mode** and **Fun Mode** come in.
+
+- **Work Mode:** My projects, technical experiments, skills, and things I'm learning to build.
+- **Fun Mode:** My creative side — art, hobbies, personal interests, and the little things that make me who I am.
+- **The charging cable:** A visual thread connecting the different parts of the experience, bringing all these interests together in one place.
+
+The idea is to make exploring my portfolio feel a little more like discovering a person than scrolling through a list of qualifications.
+
+## ✦ What's inside
+
+- **About:** A little introduction to the person behind the projects.
+- **Projects:** Things I've built, experimented with, and learned along the way.
+- **Skills:** Technologies and tools I've worked with.
+- **Experience & Education:** A snapshot of my learning and professional journey.
+- **Fun Mode:** A glimpse into my art, hobbies, and creative side.
+
+## ✦ Built with
+
+- React
+- TypeScript / JavaScript
+- Tailwind CSS
+- Vite
+
+*The technology list will be updated to reflect the final implementation.*
+
+## ✦ Getting started
+
+You'll need Git and Node.js installed.
+
+1. Clone the repository:
+
+   ```bash
+   git clone <your-repository-url>
+   cd <your-project-folder>
+   ```
+
+2. Install the dependencies:
+
+   ```bash
+   npm install
+   ```
+
+3. Start the development server:
+
+   ```bash
+   npm run dev
+   ```
+
+4. Open the local URL shown in your terminal.
+
+Check the project's package configuration for the exact requirements and commands.
+
+## ✦ Credits & inspiration
+
+This portfolio is an adaptation of [Nidhi Prajapati's open-source portfolio template](https://github.com/SomehowLiving/portfolio-template).
+
+I loved the original's continuous-thread storytelling concept and explored my own interpretation of it — reimagining the brain as a laptop, turning the thread into a charging cable, and building the experience around my own projects, interests, and Work/Fun Mode.
+
+Nidhi's original portfolio was inspired by [coolestdesigner.com](https://coolestdesigner.com/).
+
+The original template is licensed under the MIT License. The original copyright and license notices are retained in this repository. Individual visual assets may have separate licensing terms.
 
 ---
 
-## A note from me
-
-A lot of people have asked how I built this, so here's the honest answer: **the code was the easy part.**
-
-These days it doesn't really matter whether you know how to code. What matters is knowing *what* you're building and *why*: the purpose behind it, the value you're trying to give, and how people will feel when they meet it. Human psychology, how people think, what makes them stay — that's one of the most important things to understand right now.
-
-So before you open an editor, I'd highly suggest you **first think through what you want to be perceived as**, and how. Nobody is going to count your stars. Everyone is an "AI engineer" or a "developer" now, so that alone isn't what sets you apart. What does is knowing what you're doing, building it with intent, and presenting it in a way that fits who you are. That does the job.
-
-One more thing I keep noticing: people jump straight to prompting. I get it, AI is really, really powerful (maybe I'm just old). But we've reached the point where people take a prompt from GPT and paste it into Claude. That's still effort, and that's wonderful, but where's the effort from *your* end? Sketch it. Scribble it. Put some of your own creativity in before you hand it over. You'll see wonderful results.
-
-This site is my whole personality, thread and all. If it sparks something in you, I'd genuinely love to see yours: your story, your quirks, your weird little details. Send it my way at [nidhiyp05@gmail.com](mailto:nidhiyp05@gmail.com) or tag me on [X](https://x.com/pnyk05).
-
----
-
-## How it came together
-
-1. **Started with the feeling, not the layout.** I wanted the site to feel like my head: messy, curious, and connected by one thread.
-2. **Wrote the story before the page.** Brain → rabbit holes → the few things that have my heart → the years → "apparently, I don't know how to leave things alone" → the work → oh, hi. Each part answers one question about me, in my own voice.
-3. **Made the thread the system.** Everything hangs off it: objects sit along it, the timeline grows from it, the loop is tied in it, it ends at the work button and later in my hand. One idea, used everywhere, is what makes it feel designed.
-4. **Sketched, storyboarded, then built.** I made mockups and storyboards (the rabbit-hole fall had a 12-frame storyboard), built it with AI as a pair, and threw away a lot. Doodles, swirls, black holes, more doodles. Most attempts didn't make it. That's the process.
-5. **Sweated the small things.** Objects that talk back when you hover them. A climber you can drag along the thread. A cutout of me you can stretch, who gets annoyed. A cursor that only speaks when it has something to say. None of it is necessary; all of it is the point.
-6. **Then made it real.** A phone version told vertically, not shrunk. Performance work (the page once froze for 11 seconds on load). SEO, structured data and `llms.txt` so search and AI engines understand it.
-
-## What it's built with
-
-- [TanStack Start](https://tanstack.com/start) (React 19 + TanStack Router), TypeScript
-- Vite, Tailwind CSS 4
-- Animation is hand-written: SVG paths for the threads, `requestAnimationFrame` for the scroll story, CSS for reveals. No animation libraries.
-- Deployed on [Vercel](https://vercel.com)
-
-## Where things live
-
-- `src/routes/index.tsx`: the home page (story, work, ending)
-- `src/routes/work.tsx`: all the work, reached by falling down the rabbit hole
-- `src/components/rabbit-hole.tsx`: the fall and the climb back out
-- `src/styles.css`: theme tokens and animations
-- `src/assets/`: the 3D objects, project screenshots and the cutout
-
-## Run it locally
-
-```sh
-bun install   # or npm install
-bun run dev   # or npm run dev
-```
-
-## Make it yours
-
-Fork it, run it, and turn it into your own story. The code is [MIT-licensed](LICENSE); my photos, story and project screenshots aren't, so swap in yours. See [CONTRIBUTING.md](CONTRIBUTING.md) for how to adapt it, report a bug, or suggest an improvement, and show me what you build.
-
-## Contact
-
-[nidhiyp05@gmail.com](mailto:nidhiyp05@gmail.com) · [LinkedIn](https://www.linkedin.com/in/nidhi-prajapati-5b4483248/) · [GitHub](https://github.com/SomehowLiving) · [X](https://x.com/pnyk05)
+Made with curiosity, code, and a little bit of chaos. ✿
